@@ -20,8 +20,8 @@ EOF
   update-initramfs -u
 fi
 
-# Install a recent production driver (V100S is fine with 535+)
-apt-get -y install nvidia-driver-535
+# Install a recent production driver (for A100)
+apt-get -y install nvidia-driver-550
 
 # Add a simple systemd unit that continues after reboot
 cp /local/repository/scripts/cloudlab-continue.service /etc/systemd/system/cloudlab-continue.service

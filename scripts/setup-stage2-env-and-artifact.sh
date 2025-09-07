@@ -50,7 +50,7 @@ git -C "$ARTDIR" lfs install || true
 cd "$ARTDIR"
 python download_model.py || true
 
-# Convenience runner (inherits /etc/profile.d vars)
+# Convenience runner: auto-detect GPU count (A100 d8545 has up to 4)
 cat >/usr/local/bin/run-ttloramoe.sh <<'EOF'
 #!/usr/bin/env bash
 set -euxo pipefail
@@ -58,7 +58,11 @@ set -euxo pipefail
 . /local/miniconda/etc/profile.d/conda.sh
 conda activate ttloramoe
 cd /local/TTLoRAMoE-SC25
-python Artifact_1.1/inference_comparison.py --batchsize 8 --dataset qnli --test contraction --gpus 1 --workers 4
+GPU_CNT=$(nvidia-smi -L | wc -l || echo 1)
+if [ -z "$GPU_CNT" ] || [ "$GPU_CNT" -lt 1 ]; then GPU_CNT=1; fi
+python Artifact_1.1/inference_comparison.py \
+  --batchsize 8 --dataset qnli --test contraction \
+  --gpus "$GPU_CNT" --workers 8
 EOF
 chmod +x /usr/local/bin/run-ttloramoe.sh
 

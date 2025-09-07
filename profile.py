@@ -1,5 +1,4 @@
-# -*- coding: utf-8 -*-
-# Single-node r7525 GPU profile with large /local blockstore
+# Single-node d8545 (HGX A100) profile with flexible /local blockstore (Python 2 safe)
 
 import geni.portal as portal
 import geni.rspec.pg as pg
@@ -9,12 +8,20 @@ pc = portal.Context()
 request = pg.Request()
 
 pc.defineParameter("nodeType", "Hardware Type",
-                   portal.ParameterType.STRING, "r7525")
+                   portal.ParameterType.STRING, "d8545")
 pc.defineParameter("diskImage", "Disk Image",
                    portal.ParameterType.STRING,
                    "urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU22-64-STD")
-pc.defineParameter("localFSGiB", "Size of /local (ephemeral blockstore, GiB)",
-                   portal.ParameterType.INTEGER, 1900)
+
+# Ask for a large /local on the d8545 (1.6 TB NVMe exists; 1400 GiB is a safe default).
+pc.defineParameter("localFSGiB",
+                   "Size of /local (ephemeral blockstore, GiB; best-effort)",
+                   portal.ParameterType.INTEGER, 1400)
+
+# Placement hint: "any" is most portable; "nonsysvol" prefers non-system disk if advertised.
+pc.defineParameter("localFSPlacement",
+                   "Blockstore placement hint (any or nonsysvol)",
+                   portal.ParameterType.STRING, "any")
 
 params = pc.bindParameters()
 
@@ -22,12 +29,19 @@ node = request.RawPC("gpu-node")
 node.hardware_type = params.nodeType
 node.disk_image = params.diskImage
 
-# Ephemeral node-local storage mounted at /local
-bs = node.Blockstore("node-local", "/local")
-bs.size = str(int(params.localFSGiB)) + "GB"   # Python 2 compatible
-bs.placement = "nonsysvol"
+# Ephemeral storage at /local
+if int(params.localFSGiB) > 0:
+    bs = node.Blockstore("node-local", "/local")
+    bs.size = str(int(params.localFSGiB)) + "GB"
+    try:
+        bs.best_effort = True
+    except Exception:
+        pass
+    placement = str(params.localFSPlacement).strip().lower()
+    if placement in ["any", "nonsysvol"]:
+        bs.placement = placement
 
-# Run stage 1 at boot (installs NVIDIA driver and reboots)
+# Bootstrap stage 1 (NVIDIA driver; will reboot once). Stage 2 resumes via systemd.
 node.addService(pg.Execute(
     shell="bash",
     command="sudo -H /local/repository/scripts/setup-stage1-nvidia.sh"
