@@ -13,8 +13,12 @@ pc.defineParameter("nodeType", "Hardware Type",
 pc.defineParameter("diskImage", "Disk Image",
                    portal.ParameterType.STRING,
                    "urn:publicid:IDN+emulab.net+image+emulab-ops:UBUNTU22-64-STD")
-pc.defineParameter("localFSGiB", "Size of /local (ephemeral blockstore, GiB)",
-                   portal.ParameterType.INTEGER, 1900)
+pc.defineParameter("localFSGiB",
+                   "Size of node-local dataset at /local (ephemeral; best-effort)",
+                   portal.ParameterType.INTEGER, 1024)
+pc.defineParameter("datasetName",
+                   "Blockstore (dataset) name used by CloudLab snapshot UI",
+                   portal.ParameterType.STRING, "bs")
 
 params = pc.bindParameters()
 
@@ -22,10 +26,18 @@ node = request.RawPC("gpu-node")
 node.hardware_type = params.nodeType
 node.disk_image = params.diskImage
 
-# Ephemeral node-local storage mounted at /local
-bs = node.Blockstore("node-local", "/local")
-bs.size = str(int(params.localFSGiB)) + "GB"   # Python 2 compatible
-bs.placement = "nonsysvol"
+# ---- Node-local dataset (ephemeral blockstore) per CloudLab docs ----
+# Using the doc pattern: bs = node.Blockstore("<NAME>", "<MOUNTPOINT>"); bs.size="NNNGB"
+# This makes an LVM-backed local filesystem that is created and mounted automatically. :contentReference[oaicite:1]{index=1}
+if int(params.localFSGiB) > 0:
+    bs = node.Blockstore(str(params.datasetName), "/local")
+    bs.size = str(int(params.localFSGiB)) + "GB"
+    # Let the mapper allocate as much as possible up to the requested size.
+    try:
+        bs.best_effort = True
+    except Exception:
+        pass
+    # No placement hint needed for the node-local dataset example; CL will stripe across
 
 # Run stage 1 at boot (installs NVIDIA driver and reboots)
 node.addService(pg.Execute(
