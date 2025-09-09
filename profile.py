@@ -42,8 +42,13 @@ if int(params.localFSGiB) > 0:
 # Run stage 1 at boot (installs NVIDIA driver and reboots)
 node.addService(pg.Execute(
     shell="bash",
-    command="sudo -H /local/repository/scripts/setup-stage1-nvidia.sh"
-))
+    command=("sudo -H bash -lc '"
+             "for i in $(seq 1 60); do "
+             "  [ -f /local/repository/scripts/setup-stage1-nvidia.sh ] && break; "
+             "  sleep 5; "
+             "done; "
+             "chmod +x /local/repository/scripts/*.sh || true; "
+             "/local/repository/scripts/setup-stage1-nvidia.sh'")))
 
 pc.printRequestRSpec(request)
  # type: ignore
