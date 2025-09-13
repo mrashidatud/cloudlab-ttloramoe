@@ -1,253 +1,0 @@
-=== TTLoRAMoE A1.1 (Table 3 sequence) @ 20250909_070201 ===
-Repo: /local/TTLoRAMoE-SC25
-Env:  ttloramoe  (activation attempted; no installs)
-GPU(s): 2 (capped at 4); workers: 8; dataset: qnli
-Batch sizes: 2 4 6 8 16 32 64 128
-
---- nvidia-smi ---
-Tue Sep  9 07:02:02 2025       
-+---------------------------------------------------------------------------------------+
-| NVIDIA-SMI 535.247.01             Driver Version: 535.247.01   CUDA Version: 12.2     |
-|-----------------------------------------+----------------------+----------------------+
-| GPU  Name                 Persistence-M | Bus-Id        Disp.A | Volatile Uncorr. ECC |
-| Fan  Temp   Perf          Pwr:Usage/Cap |         Memory-Usage | GPU-Util  Compute M. |
-|                                         |                      |               MIG M. |
-|=========================================+======================+======================|
-|   0  Tesla V100S-PCIE-32GB          Off | 00000000:21:00.0 Off |                    0 |
-| N/A   23C    P0              24W / 250W |      0MiB / 32768MiB |      0%      Default |
-|                                         |                      |                  N/A |
-+-----------------------------------------+----------------------+----------------------+
-|   1  Tesla V100S-PCIE-32GB          Off | 00000000:E2:00.0 Off |                    0 |
-| N/A   21C    P0              24W / 250W |      0MiB / 32768MiB |      0%      Default |
-|                                         |                      |                  N/A |
-+-----------------------------------------+----------------------+----------------------+
-                                                                                         
-+---------------------------------------------------------------------------------------+
-| Processes:                                                                            |
-|  GPU   GI   CI        PID   Type   Process name                            GPU Memory |
-|        ID   ID                                                             Usage      |
-|=======================================================================================|
-|  No running processes found                                                           |
-+---------------------------------------------------------------------------------------+
-
---- git rev-parse ---
-b3c803f
-
-=== TEST: reconstruction ===
-[RUN] test=reconstruction  bs=2  dataset=qnli  gpus=2  workers=8
------ BEGIN RUN (reconstruction, bs=2) -----
-/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:111: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
-  warnings.warn(
-Map:   0%|          | 0/20 [00:00<?, ? examples/s]Map: 100%|██████████| 20/20 [00:00<00:00, 1173.45 examples/s]
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:01<00:09,  1.07s/it] 50%|█████     | 5/10 [00:01<00:00,  5.38it/s] 90%|█████████ | 9/10 [00:01<00:00,  9.87it/s]100%|██████████| 10/10 [00:01<00:00,  6.97it/s]
-           metric                   value
-0          Method  TT-LoRA Reconstruction
-1  Inference Time                0.101946
-2      Batch size                       2
-3        For loop                      10
-WALL_SECONDS=13.84
------ END RUN (reconstruction, bs=2) -----
-
-[RUN] test=reconstruction  bs=4  dataset=qnli  gpus=2  workers=8
------ BEGIN RUN (reconstruction, bs=4) -----
-/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:111: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
-  warnings.warn(
-Map:   0%|          | 0/40 [00:00<?, ? examples/s]Map: 100%|██████████| 40/40 [00:00<00:00, 1831.69 examples/s]
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:01<00:09,  1.03s/it] 50%|█████     | 5/10 [00:01<00:00,  5.58it/s] 90%|█████████ | 9/10 [00:01<00:00, 10.27it/s]100%|██████████| 10/10 [00:01<00:00,  7.20it/s]
-           metric                   value
-0          Method  TT-LoRA Reconstruction
-1  Inference Time                0.097084
-2      Batch size                       4
-3        For loop                      10
-WALL_SECONDS=13.54
------ END RUN (reconstruction, bs=4) -----
-
-[RUN] test=reconstruction  bs=6  dataset=qnli  gpus=2  workers=8
------ BEGIN RUN (reconstruction, bs=6) -----
-/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:111: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
-  warnings.warn(
-Map:   0%|          | 0/60 [00:00<?, ? examples/s]Map: 100%|██████████| 60/60 [00:00<00:00, 2695.28 examples/s]
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:01<00:09,  1.11s/it] 50%|█████     | 5/10 [00:01<00:00,  5.18it/s] 80%|████████  | 8/10 [00:01<00:00,  8.54it/s]100%|██████████| 10/10 [00:01<00:00,  6.70it/s]
-           metric                   value
-0          Method  TT-LoRA Reconstruction
-1  Inference Time                0.106062
-2      Batch size                       6
-3        For loop                      10
-WALL_SECONDS=13.65
------ END RUN (reconstruction, bs=6) -----
-
-[RUN] test=reconstruction  bs=8  dataset=qnli  gpus=2  workers=8
------ BEGIN RUN (reconstruction, bs=8) -----
-/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:111: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
-  warnings.warn(
-Map:   0%|          | 0/80 [00:00<?, ? examples/s]Map: 100%|██████████| 80/80 [00:00<00:00, 3297.99 examples/s]
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:01<00:09,  1.02s/it] 40%|████      | 4/10 [00:01<00:01,  4.47it/s] 70%|███████   | 7/10 [00:01<00:00,  7.96it/s]100%|██████████| 10/10 [00:01<00:00, 11.23it/s]100%|██████████| 10/10 [00:01<00:00,  6.82it/s]
-           metric                   value
-0          Method  TT-LoRA Reconstruction
-1  Inference Time                0.097325
-2      Batch size                       8
-3        For loop                      10
-WALL_SECONDS=13.63
------ END RUN (reconstruction, bs=8) -----
-
-[RUN] test=reconstruction  bs=16  dataset=qnli  gpus=2  workers=8
------ BEGIN RUN (reconstruction, bs=16) -----
-/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:111: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
-  warnings.warn(
-Map:   0%|          | 0/160 [00:00<?, ? examples/s]Map: 100%|██████████| 160/160 [00:00<00:00, 5056.16 examples/s]
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:01<00:10,  1.19s/it] 30%|███       | 3/10 [00:01<00:02,  2.89it/s] 50%|█████     | 5/10 [00:01<00:01,  4.87it/s] 70%|███████   | 7/10 [00:01<00:00,  6.70it/s] 90%|█████████ | 9/10 [00:01<00:00,  8.30it/s]100%|██████████| 10/10 [00:01<00:00,  5.32it/s]
-           metric                   value
-0          Method  TT-LoRA Reconstruction
-1  Inference Time                0.108413
-2      Batch size                      16
-3        For loop                      10
-WALL_SECONDS=14.32
------ END RUN (reconstruction, bs=16) -----
-
-[RUN] test=reconstruction  bs=32  dataset=qnli  gpus=2  workers=8
------ BEGIN RUN (reconstruction, bs=32) -----
-/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:111: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
-  warnings.warn(
-Map:   0%|          | 0/320 [00:00<?, ? examples/s]Map: 100%|██████████| 320/320 [00:00<00:00, 6814.12 examples/s]
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:01<00:10,  1.15s/it] 30%|███       | 3/10 [00:01<00:02,  2.79it/s] 40%|████      | 4/10 [00:01<00:01,  3.55it/s] 50%|█████     | 5/10 [00:01<00:01,  4.29it/s] 60%|██████    | 6/10 [00:01<00:00,  4.94it/s] 70%|███████   | 7/10 [00:01<00:00,  5.51it/s] 80%|████████  | 8/10 [00:01<00:00,  5.97it/s] 90%|█████████ | 9/10 [00:02<00:00,  6.32it/s]100%|██████████| 10/10 [00:02<00:00,  6.63it/s]100%|██████████| 10/10 [00:02<00:00,  4.26it/s]
-           metric                   value
-0          Method  TT-LoRA Reconstruction
-1  Inference Time                0.107326
-2      Batch size                      32
-3        For loop                      10
-WALL_SECONDS=14.83
------ END RUN (reconstruction, bs=32) -----
-
-[RUN] test=reconstruction  bs=64  dataset=qnli  gpus=2  workers=8
------ BEGIN RUN (reconstruction, bs=64) -----
-/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:111: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
-  warnings.warn(
-Map:   0%|          | 0/640 [00:00<?, ? examples/s]Map: 100%|██████████| 640/640 [00:00<00:00, 6346.83 examples/s]Map: 100%|██████████| 640/640 [00:00<00:00, 6139.40 examples/s]
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:01<00:14,  1.58s/it] 30%|███       | 3/10 [00:02<00:04,  1.59it/s] 40%|████      | 4/10 [00:02<00:03,  1.69it/s] 50%|█████     | 5/10 [00:03<00:02,  1.76it/s] 60%|██████    | 6/10 [00:03<00:02,  1.81it/s] 70%|███████   | 7/10 [00:04<00:01,  1.84it/s] 80%|████████  | 8/10 [00:04<00:01,  1.86it/s] 90%|█████████ | 9/10 [00:05<00:00,  1.88it/s]100%|██████████| 10/10 [00:05<00:00,  1.89it/s]100%|██████████| 10/10 [00:05<00:00,  1.69it/s]
-           metric                   value
-0          Method  TT-LoRA Reconstruction
-1  Inference Time                0.184372
-2      Batch size                      64
-3        For loop                      10
-WALL_SECONDS=18.48
------ END RUN (reconstruction, bs=64) -----
-
-[RUN] test=reconstruction  bs=128  dataset=qnli  gpus=2  workers=8
------ BEGIN RUN (reconstruction, bs=128) -----
-/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:111: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
-  warnings.warn(
-Map:   0%|          | 0/1280 [00:00<?, ? examples/s]Map: 100%|██████████| 1280/1280 [00:00<00:00, 6494.77 examples/s]Map: 100%|██████████| 1280/1280 [00:00<00:00, 6286.23 examples/s]
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:02<00:18,  2.07s/it] 20%|██        | 2/10 [00:02<00:07,  1.06it/s] 30%|███       | 3/10 [00:03<00:06,  1.02it/s] 40%|████      | 4/10 [00:04<00:06,  1.00s/it] 50%|█████     | 5/10 [00:05<00:05,  1.02s/it] 60%|██████    | 6/10 [00:06<00:04,  1.02s/it] 70%|███████   | 7/10 [00:07<00:03,  1.03s/it] 80%|████████  | 8/10 [00:08<00:02,  1.03s/it] 90%|█████████ | 9/10 [00:09<00:01,  1.03s/it]100%|██████████| 10/10 [00:10<00:00,  1.03s/it]100%|██████████| 10/10 [00:10<00:00,  1.06s/it]
-           metric                   value
-0          Method  TT-LoRA Reconstruction
-1  Inference Time                0.300974
-2      Batch size                     128
-3        For loop                      10
-WALL_SECONDS=23.35
------ END RUN (reconstruction, bs=128) -----
-
-=== TEST: contraction ===
-[RUN] test=contraction  bs=2  dataset=qnli  gpus=2  workers=8
------ BEGIN RUN (contraction, bs=2) -----
-/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:111: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
-  warnings.warn(
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:01<00:09,  1.01s/it] 40%|████      | 4/10 [00:01<00:01,  4.59it/s] 80%|████████  | 8/10 [00:01<00:00,  9.46it/s]100%|██████████| 10/10 [00:01<00:00,  7.28it/s]
-           metric                value
-0          Method  TT-LoRA Contraction
-1  Inference Time             0.098764
-2      Batch size                    2
-3        For loop                   10
-WALL_SECONDS=8.96
------ END RUN (contraction, bs=2) -----
-
-[RUN] test=contraction  bs=4  dataset=qnli  gpus=2  workers=8
------ BEGIN RUN (contraction, bs=4) -----
-/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:111: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
-  warnings.warn(
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:01<00:09,  1.06s/it] 40%|████      | 4/10 [00:01<00:01,  4.37it/s] 70%|███████   | 7/10 [00:01<00:00,  8.06it/s]100%|██████████| 10/10 [00:01<00:00, 11.79it/s]100%|██████████| 10/10 [00:01<00:00,  6.98it/s]
-           metric                value
-0          Method  TT-LoRA Contraction
-1  Inference Time             0.106813
-2      Batch size                    4
-3        For loop                   10
-WALL_SECONDS=8.89
------ END RUN (contraction, bs=4) -----
-
-[RUN] test=contraction  bs=6  dataset=qnli  gpus=2  workers=8
------ BEGIN RUN (contraction, bs=6) -----
-/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:111: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
-  warnings.warn(
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:01<00:09,  1.03s/it] 40%|████      | 4/10 [00:01<00:01,  4.48it/s] 70%|███████   | 7/10 [00:01<00:00,  8.23it/s]100%|██████████| 10/10 [00:01<00:00, 11.99it/s]100%|██████████| 10/10 [00:01<00:00,  7.13it/s]
-           metric                value
-0          Method  TT-LoRA Contraction
-1  Inference Time             0.101974
-2      Batch size                    6
-3        For loop                   10
-WALL_SECONDS=8.84
------ END RUN (contraction, bs=6) -----
-
-[RUN] test=contraction  bs=8  dataset=qnli  gpus=2  workers=8
------ BEGIN RUN (contraction, bs=8) -----
-/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:111: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
-  warnings.warn(
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:01<00:09,  1.05s/it] 40%|████      | 4/10 [00:01<00:01,  4.31it/s] 70%|███████   | 7/10 [00:01<00:00,  7.69it/s]100%|██████████| 10/10 [00:01<00:00, 10.90it/s]100%|██████████| 10/10 [00:01<00:00,  6.72it/s]
-           metric                value
-0          Method  TT-LoRA Contraction
-1  Inference Time             0.106646
-2      Batch size                    8
-3        For loop                   10
-WALL_SECONDS=8.92
------ END RUN (contraction, bs=8) -----
-
-[RUN] test=contraction  bs=16  dataset=qnli  gpus=2  workers=8
------ BEGIN RUN (contraction, bs=16) -----
-/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:111: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
-  warnings.warn(
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:01<00:09,  1.03s/it] 30%|███       | 3/10 [00:01<00:02,  3.27it/s] 50%|█████     | 5/10 [00:01<00:00,  5.35it/s] 70%|███████   | 7/10 [00:01<00:00,  7.17it/s] 90%|█████████ | 9/10 [00:01<00:00,  8.69it/s]100%|██████████| 10/10 [00:01<00:00,  5.80it/s]
-           metric                value
-0          Method  TT-LoRA Contraction
-1  Inference Time             0.105469
-2      Batch size                   16
-3        For loop                   10
-WALL_SECONDS=9.15
------ END RUN (contraction, bs=16) -----
-
-[RUN] test=contraction  bs=32  dataset=qnli  gpus=2  workers=8
------ BEGIN RUN (contraction, bs=32) -----
-/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:111: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
-  warnings.warn(
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:01<00:09,  1.09s/it] 30%|███       | 3/10 [00:01<00:02,  2.85it/s] 40%|████      | 4/10 [00:01<00:01,  3.59it/s] 50%|█████     | 5/10 [00:01<00:01,  4.29it/s] 60%|██████    | 6/10 [00:01<00:00,  4.90it/s] 70%|███████   | 7/10 [00:01<00:00,  5.42it/s] 80%|████████  | 8/10 [00:01<00:00,  5.84it/s] 90%|█████████ | 9/10 [00:02<00:00,  6.16it/s]100%|██████████| 10/10 [00:02<00:00,  6.41it/s]100%|██████████| 10/10 [00:02<00:00,  4.28it/s]
-           metric                value
-0          Method  TT-LoRA Contraction
-1  Inference Time             0.113981
-2      Batch size                   32
-3        For loop                   10
-WALL_SECONDS=9.81
------ END RUN (contraction, bs=32) -----
-
-[RUN] test=contraction  bs=64  dataset=qnli  gpus=2  workers=8
------ BEGIN RUN (contraction, bs=64) -----
-/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:111: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
-  warnings.warn(
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:01<00:13,  1.46s/it] 20%|██        | 2/10 [00:01<00:05,  1.47it/s] 30%|███       | 3/10 [00:02<00:04,  1.61it/s] 40%|████      | 4/10 [00:02<00:03,  1.69it/s] 50%|█████     | 5/10 [00:03<00:02,  1.74it/s] 60%|██████    | 6/10 [00:03<00:02,  1.76it/s] 70%|███████   | 7/10 [00:04<00:01,  1.78it/s] 80%|████████  | 8/10 [00:04<00:01,  1.79it/s] 90%|█████████ | 9/10 [00:05<00:00,  1.80it/s]100%|██████████| 10/10 [00:05<00:00,  1.81it/s]100%|██████████| 10/10 [00:06<00:00,  1.65it/s]
-           metric                value
-0          Method  TT-LoRA Contraction
-1  Inference Time             0.241987
-2      Batch size                   64
-3        For loop                   10
-WALL_SECONDS=13.42
------ END RUN (contraction, bs=64) -----
-
-[RUN] test=contraction  bs=128  dataset=qnli  gpus=2  workers=8
------ BEGIN RUN (contraction, bs=128) -----
-/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:111: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
-  warnings.warn(
-  0%|          | 0/10 [00:00<?, ?it/s] 10%|█         | 1/10 [00:02<00:18,  2.00s/it] 20%|██        | 2/10 [00:02<00:08,  1.03s/it] 30%|███       | 3/10 [00:03<00:07,  1.06s/it] 40%|████      | 4/10 [00:04<00:06,  1.07s/it] 50%|█████     | 5/10 [00:05<00:05,  1.08s/it] 60%|██████    | 6/10 [00:06<00:04,  1.08s/it] 70%|███████   | 7/10 [00:07<00:03,  1.09s/it] 80%|████████  | 8/10 [00:08<00:02,  1.09s/it] 90%|█████████ | 9/10 [00:09<00:01,  1.09s/it]100%|██████████| 10/10 [00:11<00:00,  1.09s/it]100%|██████████| 10/10 [00:11<00:00,  1.12s/it]
-           metric                value
-0          Method  TT-LoRA Contraction
-1  Inference Time              0.48007
-2      Batch size                  128
-3        For loop                   10
-WALL_SECONDS=18.61
------ END RUN (contraction, bs=128) -----
-
