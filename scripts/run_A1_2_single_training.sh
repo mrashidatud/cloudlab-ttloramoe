@@ -12,10 +12,10 @@ EPOCHS="${EPOCHS:-100}"
 PATIENCE="${PATIENCE:-10}"
 BATCHSIZE="${BATCHSIZE:-32}"   # use 32 for *all* datasets per your request
 
-# Supported datasets (17 in AD) minus: boolq, scitail, imdb, qqp
+# Supported datasets
 DATASETS=(
   mrpc cola sst2 rte cb sick csqa winogrande_l
-  cosmosqa socialiqa hellaswag qnli mnli
+  cosmosqa socialiqa hellaswag qnli mnli boolq scitail imdb qqp
 )
 
 # Where to log (prefer /local)
