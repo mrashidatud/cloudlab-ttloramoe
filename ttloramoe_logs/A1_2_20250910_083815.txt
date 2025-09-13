@@ -1,0 +1,1658 @@
+=== TTLoRAMoE A1.2 single-dataset training (LoRA / TT-LoRA / Adapters) ===
+Repo: /local/TTLoRAMoE-SC25
+Env : ttloramoe (activation attempted; no installs)
+GPUs: 2 (cap 4)  Workers: 8  Epochs: 100  Patience: 10
+Batchsize: 32 (forced for all datasets)
+Datasets: mrpc cola sst2 rte cb sick csqa winogrande_l cosmosqa socialiqa hellaswag qnli mnli
+
+--- nvidia-smi ---
+Wed Sep 10 08:38:16 2025       
++---------------------------------------------------------------------------------------+
+| NVIDIA-SMI 535.247.01             Driver Version: 535.247.01   CUDA Version: 12.2     |
+|-----------------------------------------+----------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |         Memory-Usage | GPU-Util  Compute M. |
+|                                         |                      |               MIG M. |
+|=========================================+======================+======================|
+|   0  Tesla V100S-PCIE-32GB          Off | 00000000:21:00.0 Off |                    0 |
+| N/A   23C    P0              24W / 250W |      0MiB / 32768MiB |      0%      Default |
+|                                         |                      |                  N/A |
++-----------------------------------------+----------------------+----------------------+
+|   1  Tesla V100S-PCIE-32GB          Off | 00000000:E2:00.0 Off |                    0 |
+| N/A   21C    P0              24W / 250W |      0MiB / 32768MiB |      0%      Default |
+|                                         |                      |                  N/A |
++-----------------------------------------+----------------------+----------------------+
+                                                                                         
++---------------------------------------------------------------------------------------+
+| Processes:                                                                            |
+|  GPU   GI   CI        PID   Type   Process name                            GPU Memory |
+|        ID   ID                                                             Usage      |
+|=======================================================================================|
+|  No running processes found                                                           |
++---------------------------------------------------------------------------------------+
+
+--- git rev-parse (repo state) ---
+b3c803f
+
+[RUN] Adapter  dataset=mrpc  bs=32  gpus=2  workers=8  epochs=100  patience=10
+----- BEGIN Adapter (mrpc) -----
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Map:   0%|          | 0/1725 [00:00<?, ? examples/s]Map: 100%|██████████| 1725/1725 [00:00<00:00, 12040.28 examples/s]Map: 100%|██████████| 1725/1725 [00:00<00:00, 10891.05 examples/s]
+There are adapters available but none are activated for the forward pass.
+Using 16bit Automatic Mixed Precision (AMP)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+HPU available: False, using: 0 HPUs
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/logger_connector/logger_connector.py:76: Starting from v1.9.0, `tensorboardX` has been removed as a dependency of the `pytorch_lightning` package, due to potential conflicts with other packages in the ML ecosystem. For this reason, `logger=True` will use `CSVLogger` as the default logger, unless the `tensorboard` or `tensorboardX` packages are found. Please `pip install lightning[extra]` or one of them to enable TensorBoard support by default
+Initializing distributed: GLOBAL_RANK: 0, MEMBER: 1/2
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Map:   0%|          | 0/1725 [00:00<?, ? examples/s]Map: 100%|██████████| 1725/1725 [00:00<00:00, 12521.68 examples/s]Map: 100%|██████████| 1725/1725 [00:00<00:00, 12134.53 examples/s]
+There are adapters available but none are activated for the forward pass.
+Initializing distributed: GLOBAL_RANK: 1, MEMBER: 2/2
+----------------------------------------------------------------------------------------------------
+distributed_backend=nccl
+All distributed processes registered. Starting with 2 processes
+----------------------------------------------------------------------------------------------------
+
+LOCAL_RANK: 1 - CUDA_VISIBLE_DEVICES: [0,1]
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/utilities/model_summary/model_summary.py:231: Precision 16-mixed is not supported by the model summary.  Estimated model size in MB will not be accurate. Using 32 bits instead.
+
+  | Name     | Type               | Params | Mode 
+--------------------------------------------------------
+0 | model    | LlamaAdapterModel  | 1.2 B  | eval 
+1 | val_f1   | MulticlassF1Score  | 0      | train
+2 | test_f1  | MulticlassF1Score  | 0      | train
+3 | val_acc  | MulticlassAccuracy | 0      | train
+4 | test_acc | MulticlassAccuracy | 0      | train
+--------------------------------------------------------
+12.6 M    Trainable params
+1.2 B     Non-trainable params
+1.2 B     Total params
+4,993.769 Total estimated model params size (MB)
+653       Modules in train mode
+12        Modules in eval mode
+Sanity Checking: |          | 0/? [00:00<?, ?it/s]Sanity Checking: |          | 0/? [00:00<?, ?it/s]Sanity Checking DataLoader 0:   0%|          | 0/2 [00:00<?, ?it/s]Sanity Checking DataLoader 0:  50%|█████     | 1/2 [00:00<00:00,  1.17it/s]Sanity Checking DataLoader 0: 100%|██████████| 2/2 [00:00<00:00,  2.06it/s]/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/logger_connector/result.py:434: It is recommended to use `self.log('val_loss', ..., sync_dist=True)` when logging on epoch level in distributed setting to accumulate the metric across devices.
+                                                                           /local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py:527: Found 12 module(s) in eval mode at the start of training. This may lead to unexpected behavior during training. If this is intentional, you can ignore this warning.
+Training: |          | 0/? [00:00<?, ?it/s]Training: |          | 0/? [00:00<?, ?it/s]Epoch 0:   0%|          | 0/58 [00:00<?, ?it/s]Epoch 0:   2%|▏         | 1/58 [00:00<00:22,  2.48it/s]Epoch 0:   2%|▏         | 1/58 [00:00<00:23,  2.48it/s, v_num=12, train_loss=0.664][rank0]: Traceback (most recent call last):
+[rank0]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 168, in <module>
+[rank0]:     main()
+[rank0]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 156, in main
+[rank0]:     analysis =  train_moe_without_ray(config)
+[rank0]:                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 104, in train_moe_without_ray
+[rank0]:     trainer.fit(model=lightning_model,
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 560, in fit
+[rank0]:     call._call_and_handle_interrupt(
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 48, in _call_and_handle_interrupt
+[rank0]:     return trainer.strategy.launcher.launch(trainer_fn, *args, trainer=trainer, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/launchers/subprocess_script.py", line 105, in launch
+[rank0]:     return function(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 598, in _fit_impl
+[rank0]:     self._run(model, ckpt_path=ckpt_path)
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 1011, in _run
+[rank0]:     results = self._run_stage()
+[rank0]:               ^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 1055, in _run_stage
+[rank0]:     self.fit_loop.run()
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py", line 216, in run
+[rank0]:     self.advance()
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py", line 458, in advance
+[rank0]:     self.epoch_loop.run(self._data_fetcher)
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 152, in run
+[rank0]:     self.advance(data_fetcher)
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 348, in advance
+[rank0]:     batch_output = self.automatic_optimization.run(trainer.optimizers[0], batch_idx, kwargs)
+[rank0]:                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 192, in run
+[rank0]:     self._optimizer_step(batch_idx, closure)
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 270, in _optimizer_step
+[rank0]:     call._call_lightning_module_hook(
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 177, in _call_lightning_module_hook
+[rank0]:     output = fn(*args, **kwargs)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/core/module.py", line 1366, in optimizer_step
+[rank0]:     optimizer.step(closure=optimizer_closure)
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/core/optimizer.py", line 154, in step
+[rank0]:     step_output = self._strategy.optimizer_step(self._optimizer, closure, **kwargs)
+[rank0]:                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/ddp.py", line 273, in optimizer_step
+[rank0]:     optimizer_output = super().optimizer_step(optimizer, closure, model, **kwargs)
+[rank0]:                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 239, in optimizer_step
+[rank0]:     return self.precision_plugin.optimizer_step(optimizer, model=model, closure=closure, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/plugins/precision/amp.py", line 79, in optimizer_step
+[rank0]:     closure_result = closure()
+[rank0]:                      ^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 146, in __call__
+[rank0]:     self._result = self.closure(*args, **kwargs)
+[rank0]:                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+[rank0]:     return func(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 131, in closure
+[rank0]:     step_output = self._step_fn()
+[rank0]:                   ^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 319, in _training_step
+[rank0]:     training_step_output = call._call_strategy_hook(trainer, "training_step", *kwargs.values())
+[rank0]:                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 329, in _call_strategy_hook
+[rank0]:     output = fn(*args, **kwargs)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 390, in training_step
+[rank0]:     return self._forward_redirection(self.model, self.lightning_module, "training_step", *args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 641, in __call__
+[rank0]:     wrapper_output = wrapper_module(*args, **kwargs)
+[rank0]:                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/parallel/distributed.py", line 1632, in forward
+[rank0]:     inputs, kwargs = self._pre_forward(*inputs, **kwargs)
+[rank0]:                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/parallel/distributed.py", line 1523, in _pre_forward
+[rank0]:     if torch.is_grad_enabled() and self.reducer._rebuild_buckets():
+[rank0]:                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]: RuntimeError: It looks like your LightningModule has parameters that were not used in producing the loss returned by training_step. If this is intentional, you must enable the detection of unused parameters in DDP, either by setting the string value `strategy='ddp_find_unused_parameters_true'` or by setting the flag in the strategy with `strategy=DDPStrategy(find_unused_parameters=True)`.
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 168, in <module>
+[rank1]:     main()
+[rank1]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 156, in main
+[rank1]:     analysis =  train_moe_without_ray(config)
+[rank1]:                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 104, in train_moe_without_ray
+[rank1]:     trainer.fit(model=lightning_model,
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 560, in fit
+[rank1]:     call._call_and_handle_interrupt(
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 48, in _call_and_handle_interrupt
+[rank1]:     return trainer.strategy.launcher.launch(trainer_fn, *args, trainer=trainer, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/launchers/subprocess_script.py", line 105, in launch
+[rank1]:     return function(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 598, in _fit_impl
+[rank1]:     self._run(model, ckpt_path=ckpt_path)
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 1011, in _run
+[rank1]:     results = self._run_stage()
+[rank1]:               ^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 1055, in _run_stage
+[rank1]:     self.fit_loop.run()
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py", line 216, in run
+[rank1]:     self.advance()
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py", line 458, in advance
+[rank1]:     self.epoch_loop.run(self._data_fetcher)
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 152, in run
+[rank1]:     self.advance(data_fetcher)
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 348, in advance
+[rank1]:     batch_output = self.automatic_optimization.run(trainer.optimizers[0], batch_idx, kwargs)
+[rank1]:                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 192, in run
+[rank1]:     self._optimizer_step(batch_idx, closure)
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 270, in _optimizer_step
+[rank1]:     call._call_lightning_module_hook(
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 177, in _call_lightning_module_hook
+[rank1]:     output = fn(*args, **kwargs)
+[rank1]:              ^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/core/module.py", line 1366, in optimizer_step
+[rank1]:     optimizer.step(closure=optimizer_closure)
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/core/optimizer.py", line 154, in step
+[rank1]:     step_output = self._strategy.optimizer_step(self._optimizer, closure, **kwargs)
+[rank1]:                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/ddp.py", line 273, in optimizer_step
+[rank1]:     optimizer_output = super().optimizer_step(optimizer, closure, model, **kwargs)
+[rank1]:                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 239, in optimizer_step
+[rank1]:     return self.precision_plugin.optimizer_step(optimizer, model=model, closure=closure, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/plugins/precision/amp.py", line 79, in optimizer_step
+[rank1]:     closure_result = closure()
+[rank1]:                      ^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 146, in __call__
+[rank1]:     self._result = self.closure(*args, **kwargs)
+[rank1]:                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+[rank1]:     return func(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 131, in closure
+[rank1]:     step_output = self._step_fn()
+[rank1]:                   ^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 319, in _training_step
+[rank1]:     training_step_output = call._call_strategy_hook(trainer, "training_step", *kwargs.values())
+[rank1]:                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 329, in _call_strategy_hook
+[rank1]:     output = fn(*args, **kwargs)
+[rank1]:              ^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 390, in training_step
+[rank1]:     return self._forward_redirection(self.model, self.lightning_module, "training_step", *args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 641, in __call__
+[rank1]:     wrapper_output = wrapper_module(*args, **kwargs)
+[rank1]:                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/parallel/distributed.py", line 1632, in forward
+[rank1]:     inputs, kwargs = self._pre_forward(*inputs, **kwargs)
+[rank1]:                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/parallel/distributed.py", line 1523, in _pre_forward
+[rank1]:     if torch.is_grad_enabled() and self.reducer._rebuild_buckets():
+[rank1]:                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]: RuntimeError: It looks like your LightningModule has parameters that were not used in producing the loss returned by training_step. If this is intentional, you must enable the detection of unused parameters in DDP, either by setting the string value `strategy='ddp_find_unused_parameters_true'` or by setting the flag in the strategy with `strategy=DDPStrategy(find_unused_parameters=True)`.
+Epoch 0:   2%|▏         | 1/58 [00:04<04:13,  0.23it/s, v_num=12, train_loss=0.664]Command exited with non-zero status 1
+WALL_SECONDS=20.89
+----- END Adapter (mrpc) -----
+
+[RUN] Adapter  dataset=cola  bs=32  gpus=2  workers=8  epochs=100  patience=10
+----- BEGIN Adapter (cola) -----
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Map:   0%|          | 0/1063 [00:00<?, ? examples/s]Map: 100%|██████████| 1063/1063 [00:00<00:00, 22651.87 examples/s]
+There are adapters available but none are activated for the forward pass.
+Using 16bit Automatic Mixed Precision (AMP)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+HPU available: False, using: 0 HPUs
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/logger_connector/logger_connector.py:76: Starting from v1.9.0, `tensorboardX` has been removed as a dependency of the `pytorch_lightning` package, due to potential conflicts with other packages in the ML ecosystem. For this reason, `logger=True` will use `CSVLogger` as the default logger, unless the `tensorboard` or `tensorboardX` packages are found. Please `pip install lightning[extra]` or one of them to enable TensorBoard support by default
+Initializing distributed: GLOBAL_RANK: 0, MEMBER: 1/2
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Map:   0%|          | 0/1063 [00:00<?, ? examples/s]Map: 100%|██████████| 1063/1063 [00:00<00:00, 22978.28 examples/s]
+There are adapters available but none are activated for the forward pass.
+Initializing distributed: GLOBAL_RANK: 1, MEMBER: 2/2
+----------------------------------------------------------------------------------------------------
+distributed_backend=nccl
+All distributed processes registered. Starting with 2 processes
+----------------------------------------------------------------------------------------------------
+
+LOCAL_RANK: 1 - CUDA_VISIBLE_DEVICES: [0,1]
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/utilities/model_summary/model_summary.py:231: Precision 16-mixed is not supported by the model summary.  Estimated model size in MB will not be accurate. Using 32 bits instead.
+
+  | Name     | Type               | Params | Mode 
+--------------------------------------------------------
+0 | model    | LlamaAdapterModel  | 1.2 B  | eval 
+1 | val_f1   | MulticlassF1Score  | 0      | train
+2 | test_f1  | MulticlassF1Score  | 0      | train
+3 | val_acc  | MulticlassAccuracy | 0      | train
+4 | test_acc | MulticlassAccuracy | 0      | train
+--------------------------------------------------------
+12.6 M    Trainable params
+1.2 B     Non-trainable params
+1.2 B     Total params
+4,993.769 Total estimated model params size (MB)
+653       Modules in train mode
+12        Modules in eval mode
+Sanity Checking: |          | 0/? [00:00<?, ?it/s]Sanity Checking: |          | 0/? [00:00<?, ?it/s]Sanity Checking DataLoader 0:   0%|          | 0/2 [00:00<?, ?it/s]Sanity Checking DataLoader 0:  50%|█████     | 1/2 [00:00<00:00,  1.18it/s]Sanity Checking DataLoader 0: 100%|██████████| 2/2 [00:00<00:00,  2.22it/s]/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/logger_connector/result.py:434: It is recommended to use `self.log('val_loss', ..., sync_dist=True)` when logging on epoch level in distributed setting to accumulate the metric across devices.
+                                                                           /local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py:527: Found 12 module(s) in eval mode at the start of training. This may lead to unexpected behavior during training. If this is intentional, you can ignore this warning.
+Training: |          | 0/? [00:00<?, ?it/s]Training: |          | 0/? [00:00<?, ?it/s]Epoch 0:   0%|          | 0/134 [00:00<?, ?it/s]Epoch 0:   1%|          | 1/134 [00:00<00:40,  3.27it/s]Epoch 0:   1%|          | 1/134 [00:00<00:40,  3.26it/s, v_num=13, train_loss=0.587][rank1]: Traceback (most recent call last):
+[rank1]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 168, in <module>
+[rank1]:     main()
+[rank1]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 156, in main
+[rank1]:     analysis =  train_moe_without_ray(config)
+[rank1]:                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 104, in train_moe_without_ray
+[rank1]:     trainer.fit(model=lightning_model,
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 560, in fit
+[rank1]:     call._call_and_handle_interrupt(
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 48, in _call_and_handle_interrupt
+[rank1]:     return trainer.strategy.launcher.launch(trainer_fn, *args, trainer=trainer, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/launchers/subprocess_script.py", line 105, in launch
+[rank1]:     return function(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 598, in _fit_impl
+[rank1]:     self._run(model, ckpt_path=ckpt_path)
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 1011, in _run
+[rank1]:     results = self._run_stage()
+[rank1]:               ^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 1055, in _run_stage
+[rank1]:     self.fit_loop.run()
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py", line 216, in run
+[rank1]:     self.advance()
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py", line 458, in advance
+[rank1]:     self.epoch_loop.run(self._data_fetcher)
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 152, in run
+[rank1]:     self.advance(data_fetcher)
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 348, in advance
+[rank1]:     batch_output = self.automatic_optimization.run(trainer.optimizers[0], batch_idx, kwargs)
+[rank1]:                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 192, in run
+[rank1]:     self._optimizer_step(batch_idx, closure)
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 270, in _optimizer_step
+[rank1]:     call._call_lightning_module_hook(
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 177, in _call_lightning_module_hook
+[rank1]:     output = fn(*args, **kwargs)
+[rank1]:              ^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/core/module.py", line 1366, in optimizer_step
+[rank1]:     optimizer.step(closure=optimizer_closure)
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/core/optimizer.py", line 154, in step
+[rank1]:     step_output = self._strategy.optimizer_step(self._optimizer, closure, **kwargs)
+[rank1]:                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/ddp.py", line 273, in optimizer_step
+[rank1]:     optimizer_output = super().optimizer_step(optimizer, closure, model, **kwargs)
+[rank1]:                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 239, in optimizer_step
+[rank1]:     return self.precision_plugin.optimizer_step(optimizer, model=model, closure=closure, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/plugins/precision/amp.py", line 79, in optimizer_step
+[rank1]:     closure_result = closure()
+[rank1]:                      ^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 146, in __call__
+[rank1]:     self._result = self.closure(*args, **kwargs)
+[rank1]:                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+[rank1]:     return func(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 131, in closure
+[rank1]:     step_output = self._step_fn()
+[rank1]:                   ^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 319, in _training_step
+[rank1]:     training_step_output = call._call_strategy_hook(trainer, "training_step", *kwargs.values())
+[rank1]:                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 329, in _call_strategy_hook
+[rank1]:     output = fn(*args, **kwargs)
+[rank1]:              ^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 390, in training_step
+[rank1]:     return self._forward_redirection(self.model, self.lightning_module, "training_step", *args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 641, in __call__
+[rank1]:     wrapper_output = wrapper_module(*args, **kwargs)
+[rank1]:                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/parallel/distributed.py", line 1632, in forward
+[rank1]:     inputs, kwargs = self._pre_forward(*inputs, **kwargs)
+[rank1]:                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/parallel/distributed.py", line 1523, in _pre_forward
+[rank1]:     if torch.is_grad_enabled() and self.reducer._rebuild_buckets():
+[rank1]:                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]: RuntimeError: It looks like your LightningModule has parameters that were not used in producing the loss returned by training_step. If this is intentional, you must enable the detection of unused parameters in DDP, either by setting the string value `strategy='ddp_find_unused_parameters_true'` or by setting the flag in the strategy with `strategy=DDPStrategy(find_unused_parameters=True)`.
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 168, in <module>
+[rank0]:     main()
+[rank0]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 156, in main
+[rank0]:     analysis =  train_moe_without_ray(config)
+[rank0]:                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 104, in train_moe_without_ray
+[rank0]:     trainer.fit(model=lightning_model,
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 560, in fit
+[rank0]:     call._call_and_handle_interrupt(
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 48, in _call_and_handle_interrupt
+[rank0]:     return trainer.strategy.launcher.launch(trainer_fn, *args, trainer=trainer, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/launchers/subprocess_script.py", line 105, in launch
+[rank0]:     return function(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 598, in _fit_impl
+[rank0]:     self._run(model, ckpt_path=ckpt_path)
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 1011, in _run
+[rank0]:     results = self._run_stage()
+[rank0]:               ^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 1055, in _run_stage
+[rank0]:     self.fit_loop.run()
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py", line 216, in run
+[rank0]:     self.advance()
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py", line 458, in advance
+[rank0]:     self.epoch_loop.run(self._data_fetcher)
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 152, in run
+[rank0]:     self.advance(data_fetcher)
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 348, in advance
+[rank0]:     batch_output = self.automatic_optimization.run(trainer.optimizers[0], batch_idx, kwargs)
+[rank0]:                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 192, in run
+[rank0]:     self._optimizer_step(batch_idx, closure)
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 270, in _optimizer_step
+[rank0]:     call._call_lightning_module_hook(
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 177, in _call_lightning_module_hook
+[rank0]:     output = fn(*args, **kwargs)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/core/module.py", line 1366, in optimizer_step
+[rank0]:     optimizer.step(closure=optimizer_closure)
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/core/optimizer.py", line 154, in step
+[rank0]:     step_output = self._strategy.optimizer_step(self._optimizer, closure, **kwargs)
+[rank0]:                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/ddp.py", line 273, in optimizer_step
+[rank0]:     optimizer_output = super().optimizer_step(optimizer, closure, model, **kwargs)
+[rank0]:                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 239, in optimizer_step
+[rank0]:     return self.precision_plugin.optimizer_step(optimizer, model=model, closure=closure, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/plugins/precision/amp.py", line 79, in optimizer_step
+[rank0]:     closure_result = closure()
+[rank0]:                      ^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 146, in __call__
+[rank0]:     self._result = self.closure(*args, **kwargs)
+[rank0]:                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+[rank0]:     return func(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 131, in closure
+[rank0]:     step_output = self._step_fn()
+[rank0]:                   ^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 319, in _training_step
+[rank0]:     training_step_output = call._call_strategy_hook(trainer, "training_step", *kwargs.values())
+[rank0]:                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 329, in _call_strategy_hook
+[rank0]:     output = fn(*args, **kwargs)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 390, in training_step
+[rank0]:     return self._forward_redirection(self.model, self.lightning_module, "training_step", *args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 641, in __call__
+[rank0]:     wrapper_output = wrapper_module(*args, **kwargs)
+[rank0]:                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/parallel/distributed.py", line 1632, in forward
+[rank0]:     inputs, kwargs = self._pre_forward(*inputs, **kwargs)
+[rank0]:                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/parallel/distributed.py", line 1523, in _pre_forward
+[rank0]:     if torch.is_grad_enabled() and self.reducer._rebuild_buckets():
+[rank0]:                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]: RuntimeError: It looks like your LightningModule has parameters that were not used in producing the loss returned by training_step. If this is intentional, you must enable the detection of unused parameters in DDP, either by setting the string value `strategy='ddp_find_unused_parameters_true'` or by setting the flag in the strategy with `strategy=DDPStrategy(find_unused_parameters=True)`.
+Epoch 0:   1%|          | 1/134 [00:04<09:49,  0.23it/s, v_num=13, train_loss=0.587]Command exited with non-zero status 1
+WALL_SECONDS=20.56
+----- END Adapter (cola) -----
+
+[RUN] Adapter  dataset=sst2  bs=32  gpus=2  workers=8  epochs=100  patience=10
+----- BEGIN Adapter (sst2) -----
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Map:   0%|          | 0/1821 [00:00<?, ? examples/s]Map: 100%|██████████| 1821/1821 [00:00<00:00, 18745.85 examples/s]
+There are adapters available but none are activated for the forward pass.
+Using 16bit Automatic Mixed Precision (AMP)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+HPU available: False, using: 0 HPUs
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/logger_connector/logger_connector.py:76: Starting from v1.9.0, `tensorboardX` has been removed as a dependency of the `pytorch_lightning` package, due to potential conflicts with other packages in the ML ecosystem. For this reason, `logger=True` will use `CSVLogger` as the default logger, unless the `tensorboard` or `tensorboardX` packages are found. Please `pip install lightning[extra]` or one of them to enable TensorBoard support by default
+Initializing distributed: GLOBAL_RANK: 0, MEMBER: 1/2
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Map:   0%|          | 0/1821 [00:00<?, ? examples/s]Map: 100%|██████████| 1821/1821 [00:00<00:00, 19783.48 examples/s]
+There are adapters available but none are activated for the forward pass.
+Initializing distributed: GLOBAL_RANK: 1, MEMBER: 2/2
+----------------------------------------------------------------------------------------------------
+distributed_backend=nccl
+All distributed processes registered. Starting with 2 processes
+----------------------------------------------------------------------------------------------------
+
+LOCAL_RANK: 1 - CUDA_VISIBLE_DEVICES: [0,1]
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/utilities/model_summary/model_summary.py:231: Precision 16-mixed is not supported by the model summary.  Estimated model size in MB will not be accurate. Using 32 bits instead.
+
+  | Name     | Type               | Params | Mode 
+--------------------------------------------------------
+0 | model    | LlamaAdapterModel  | 1.2 B  | eval 
+1 | val_f1   | MulticlassF1Score  | 0      | train
+2 | test_f1  | MulticlassF1Score  | 0      | train
+3 | val_acc  | MulticlassAccuracy | 0      | train
+4 | test_acc | MulticlassAccuracy | 0      | train
+--------------------------------------------------------
+12.6 M    Trainable params
+1.2 B     Non-trainable params
+1.2 B     Total params
+4,993.769 Total estimated model params size (MB)
+653       Modules in train mode
+12        Modules in eval mode
+Sanity Checking: |          | 0/? [00:00<?, ?it/s]Sanity Checking: |          | 0/? [00:00<?, ?it/s]Sanity Checking DataLoader 0:   0%|          | 0/2 [00:00<?, ?it/s]Sanity Checking DataLoader 0:  50%|█████     | 1/2 [00:00<00:00,  1.25it/s]Sanity Checking DataLoader 0: 100%|██████████| 2/2 [00:00<00:00,  2.27it/s]/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/logger_connector/result.py:434: It is recommended to use `self.log('val_loss', ..., sync_dist=True)` when logging on epoch level in distributed setting to accumulate the metric across devices.
+                                                                           /local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py:527: Found 12 module(s) in eval mode at the start of training. This may lead to unexpected behavior during training. If this is intentional, you can ignore this warning.
+Training: |          | 0/? [00:00<?, ?it/s]Training: |          | 0/? [00:00<?, ?it/s]Epoch 0:   0%|          | 0/1053 [00:00<?, ?it/s]Epoch 0:   0%|          | 1/1053 [00:00<06:39,  2.63it/s]Epoch 0:   0%|          | 1/1053 [00:00<06:40,  2.63it/s, v_num=14, train_loss=0.632][rank1]: Traceback (most recent call last):
+[rank1]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 168, in <module>
+[rank1]:     main()
+[rank1]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 156, in main
+[rank1]:     analysis =  train_moe_without_ray(config)
+[rank1]:                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 104, in train_moe_without_ray
+[rank1]:     trainer.fit(model=lightning_model,
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 560, in fit
+[rank1]:     call._call_and_handle_interrupt(
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 48, in _call_and_handle_interrupt
+[rank1]:     return trainer.strategy.launcher.launch(trainer_fn, *args, trainer=trainer, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/launchers/subprocess_script.py", line 105, in launch
+[rank1]:     return function(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 598, in _fit_impl
+[rank1]:     self._run(model, ckpt_path=ckpt_path)
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 1011, in _run
+[rank1]:     results = self._run_stage()
+[rank1]:               ^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 1055, in _run_stage
+[rank1]:     self.fit_loop.run()
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py", line 216, in run
+[rank1]:     self.advance()
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py", line 458, in advance
+[rank1]:     self.epoch_loop.run(self._data_fetcher)
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 152, in run
+[rank1]:     self.advance(data_fetcher)
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 348, in advance
+[rank1]:     batch_output = self.automatic_optimization.run(trainer.optimizers[0], batch_idx, kwargs)
+[rank1]:                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 192, in run
+[rank1]:     self._optimizer_step(batch_idx, closure)
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 270, in _optimizer_step
+[rank1]:     call._call_lightning_module_hook(
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 177, in _call_lightning_module_hook
+[rank1]:     output = fn(*args, **kwargs)
+[rank1]:              ^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/core/module.py", line 1366, in optimizer_step
+[rank1]:     optimizer.step(closure=optimizer_closure)
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/core/optimizer.py", line 154, in step
+[rank1]:     step_output = self._strategy.optimizer_step(self._optimizer, closure, **kwargs)
+[rank1]:                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/ddp.py", line 273, in optimizer_step
+[rank1]:     optimizer_output = super().optimizer_step(optimizer, closure, model, **kwargs)
+[rank1]:                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 239, in optimizer_step
+[rank1]:     return self.precision_plugin.optimizer_step(optimizer, model=model, closure=closure, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/plugins/precision/amp.py", line 79, in optimizer_step
+[rank1]:     closure_result = closure()
+[rank1]:                      ^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 146, in __call__
+[rank1]:     self._result = self.closure(*args, **kwargs)
+[rank1]:                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+[rank1]:     return func(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 131, in closure
+[rank1]:     step_output = self._step_fn()
+[rank1]:                   ^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 319, in _training_step
+[rank1]:     training_step_output = call._call_strategy_hook(trainer, "training_step", *kwargs.values())
+[rank1]:                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 329, in _call_strategy_hook
+[rank1]:     output = fn(*args, **kwargs)
+[rank1]:              ^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 390, in training_step
+[rank1]:     return self._forward_redirection(self.model, self.lightning_module, "training_step", *args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 641, in __call__
+[rank1]:     wrapper_output = wrapper_module(*args, **kwargs)
+[rank1]:                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/parallel/distributed.py", line 1632, in forward
+[rank1]:     inputs, kwargs = self._pre_forward(*inputs, **kwargs)
+[rank1]:                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/parallel/distributed.py", line 1523, in _pre_forward
+[rank1]:     if torch.is_grad_enabled() and self.reducer._rebuild_buckets():
+[rank1]:                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]: RuntimeError: It looks like your LightningModule has parameters that were not used in producing the loss returned by training_step. If this is intentional, you must enable the detection of unused parameters in DDP, either by setting the string value `strategy='ddp_find_unused_parameters_true'` or by setting the flag in the strategy with `strategy=DDPStrategy(find_unused_parameters=True)`.
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 168, in <module>
+[rank0]:     main()
+[rank0]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 156, in main
+[rank0]:     analysis =  train_moe_without_ray(config)
+[rank0]:                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 104, in train_moe_without_ray
+[rank0]:     trainer.fit(model=lightning_model,
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 560, in fit
+[rank0]:     call._call_and_handle_interrupt(
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 48, in _call_and_handle_interrupt
+[rank0]:     return trainer.strategy.launcher.launch(trainer_fn, *args, trainer=trainer, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/launchers/subprocess_script.py", line 105, in launch
+[rank0]:     return function(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 598, in _fit_impl
+[rank0]:     self._run(model, ckpt_path=ckpt_path)
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 1011, in _run
+[rank0]:     results = self._run_stage()
+[rank0]:               ^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 1055, in _run_stage
+[rank0]:     self.fit_loop.run()
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py", line 216, in run
+[rank0]:     self.advance()
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py", line 458, in advance
+[rank0]:     self.epoch_loop.run(self._data_fetcher)
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 152, in run
+[rank0]:     self.advance(data_fetcher)
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 348, in advance
+[rank0]:     batch_output = self.automatic_optimization.run(trainer.optimizers[0], batch_idx, kwargs)
+[rank0]:                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 192, in run
+[rank0]:     self._optimizer_step(batch_idx, closure)
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 270, in _optimizer_step
+[rank0]:     call._call_lightning_module_hook(
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 177, in _call_lightning_module_hook
+[rank0]:     output = fn(*args, **kwargs)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/core/module.py", line 1366, in optimizer_step
+[rank0]:     optimizer.step(closure=optimizer_closure)
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/core/optimizer.py", line 154, in step
+[rank0]:     step_output = self._strategy.optimizer_step(self._optimizer, closure, **kwargs)
+[rank0]:                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/ddp.py", line 273, in optimizer_step
+[rank0]:     optimizer_output = super().optimizer_step(optimizer, closure, model, **kwargs)
+[rank0]:                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 239, in optimizer_step
+[rank0]:     return self.precision_plugin.optimizer_step(optimizer, model=model, closure=closure, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/plugins/precision/amp.py", line 79, in optimizer_step
+[rank0]:     closure_result = closure()
+[rank0]:                      ^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 146, in __call__
+[rank0]:     self._result = self.closure(*args, **kwargs)
+[rank0]:                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+[rank0]:     return func(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 131, in closure
+[rank0]:     step_output = self._step_fn()
+[rank0]:                   ^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 319, in _training_step
+[rank0]:     training_step_output = call._call_strategy_hook(trainer, "training_step", *kwargs.values())
+[rank0]:                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 329, in _call_strategy_hook
+[rank0]:     output = fn(*args, **kwargs)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 390, in training_step
+[rank0]:     return self._forward_redirection(self.model, self.lightning_module, "training_step", *args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 641, in __call__
+[rank0]:     wrapper_output = wrapper_module(*args, **kwargs)
+[rank0]:                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/parallel/distributed.py", line 1632, in forward
+[rank0]:     inputs, kwargs = self._pre_forward(*inputs, **kwargs)
+[rank0]:                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/parallel/distributed.py", line 1523, in _pre_forward
+[rank0]:     if torch.is_grad_enabled() and self.reducer._rebuild_buckets():
+[rank0]:                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]: RuntimeError: It looks like your LightningModule has parameters that were not used in producing the loss returned by training_step. If this is intentional, you must enable the detection of unused parameters in DDP, either by setting the string value `strategy='ddp_find_unused_parameters_true'` or by setting the flag in the strategy with `strategy=DDPStrategy(find_unused_parameters=True)`.
+Epoch 0:   0%|          | 1/1053 [00:04<1:18:35,  0.22it/s, v_num=14, train_loss=0.632]Command exited with non-zero status 1
+WALL_SECONDS=20.82
+----- END Adapter (sst2) -----
+
+[RUN] Adapter  dataset=rte  bs=32  gpus=2  workers=8  epochs=100  patience=10
+----- BEGIN Adapter (rte) -----
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Map:   0%|          | 0/3000 [00:00<?, ? examples/s]Map: 100%|██████████| 3000/3000 [00:00<00:00, 6915.11 examples/s]Map: 100%|██████████| 3000/3000 [00:00<00:00, 6623.31 examples/s]
+There are adapters available but none are activated for the forward pass.
+Using 16bit Automatic Mixed Precision (AMP)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+HPU available: False, using: 0 HPUs
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/logger_connector/logger_connector.py:76: Starting from v1.9.0, `tensorboardX` has been removed as a dependency of the `pytorch_lightning` package, due to potential conflicts with other packages in the ML ecosystem. For this reason, `logger=True` will use `CSVLogger` as the default logger, unless the `tensorboard` or `tensorboardX` packages are found. Please `pip install lightning[extra]` or one of them to enable TensorBoard support by default
+Initializing distributed: GLOBAL_RANK: 0, MEMBER: 1/2
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Map:   0%|          | 0/3000 [00:00<?, ? examples/s]Map: 100%|██████████| 3000/3000 [00:00<00:00, 7171.26 examples/s]Map: 100%|██████████| 3000/3000 [00:00<00:00, 6857.49 examples/s]
+There are adapters available but none are activated for the forward pass.
+Initializing distributed: GLOBAL_RANK: 1, MEMBER: 2/2
+----------------------------------------------------------------------------------------------------
+distributed_backend=nccl
+All distributed processes registered. Starting with 2 processes
+----------------------------------------------------------------------------------------------------
+
+LOCAL_RANK: 1 - CUDA_VISIBLE_DEVICES: [0,1]
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/utilities/model_summary/model_summary.py:231: Precision 16-mixed is not supported by the model summary.  Estimated model size in MB will not be accurate. Using 32 bits instead.
+
+  | Name     | Type               | Params | Mode 
+--------------------------------------------------------
+0 | model    | LlamaAdapterModel  | 1.2 B  | eval 
+1 | val_f1   | MulticlassF1Score  | 0      | train
+2 | test_f1  | MulticlassF1Score  | 0      | train
+3 | val_acc  | MulticlassAccuracy | 0      | train
+4 | test_acc | MulticlassAccuracy | 0      | train
+--------------------------------------------------------
+12.6 M    Trainable params
+1.2 B     Non-trainable params
+1.2 B     Total params
+4,993.769 Total estimated model params size (MB)
+653       Modules in train mode
+12        Modules in eval mode
+Sanity Checking: |          | 0/? [00:00<?, ?it/s]Sanity Checking: |          | 0/? [00:00<?, ?it/s]Sanity Checking DataLoader 0:   0%|          | 0/2 [00:00<?, ?it/s]Sanity Checking DataLoader 0:  50%|█████     | 1/2 [00:00<00:00,  1.00it/s]Sanity Checking DataLoader 0: 100%|██████████| 2/2 [00:01<00:00,  1.55it/s]/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/logger_connector/result.py:434: It is recommended to use `self.log('val_loss', ..., sync_dist=True)` when logging on epoch level in distributed setting to accumulate the metric across devices.
+                                                                           /local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py:310: The number of training batches (39) is smaller than the logging interval Trainer(log_every_n_steps=50). Set a lower value for log_every_n_steps if you want to see logs for the training epoch.
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py:527: Found 12 module(s) in eval mode at the start of training. This may lead to unexpected behavior during training. If this is intentional, you can ignore this warning.
+Training: |          | 0/? [00:00<?, ?it/s]Training: |          | 0/? [00:00<?, ?it/s]Epoch 0:   0%|          | 0/39 [00:00<?, ?it/s]Epoch 0:   3%|▎         | 1/39 [00:00<00:34,  1.09it/s]Epoch 0:   3%|▎         | 1/39 [00:00<00:34,  1.09it/s, v_num=15, train_loss=0.851][rank1]: Traceback (most recent call last):
+[rank1]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 168, in <module>
+[rank1]:     main()
+[rank1]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 156, in main
+[rank1]:     analysis =  train_moe_without_ray(config)
+[rank1]:                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 104, in train_moe_without_ray
+[rank1]:     trainer.fit(model=lightning_model,
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 560, in fit
+[rank1]:     call._call_and_handle_interrupt(
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 48, in _call_and_handle_interrupt
+[rank1]:     return trainer.strategy.launcher.launch(trainer_fn, *args, trainer=trainer, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/launchers/subprocess_script.py", line 105, in launch
+[rank1]:     return function(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 598, in _fit_impl
+[rank1]:     self._run(model, ckpt_path=ckpt_path)
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 1011, in _run
+[rank1]:     results = self._run_stage()
+[rank1]:               ^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 1055, in _run_stage
+[rank1]:     self.fit_loop.run()
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py", line 216, in run
+[rank1]:     self.advance()
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py", line 458, in advance
+[rank1]:     self.epoch_loop.run(self._data_fetcher)
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 152, in run
+[rank1]:     self.advance(data_fetcher)
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 348, in advance
+[rank1]:     batch_output = self.automatic_optimization.run(trainer.optimizers[0], batch_idx, kwargs)
+[rank1]:                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 192, in run
+[rank1]:     self._optimizer_step(batch_idx, closure)
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 270, in _optimizer_step
+[rank1]:     call._call_lightning_module_hook(
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 177, in _call_lightning_module_hook
+[rank1]:     output = fn(*args, **kwargs)
+[rank1]:              ^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/core/module.py", line 1366, in optimizer_step
+[rank1]:     optimizer.step(closure=optimizer_closure)
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/core/optimizer.py", line 154, in step
+[rank1]:     step_output = self._strategy.optimizer_step(self._optimizer, closure, **kwargs)
+[rank1]:                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/ddp.py", line 273, in optimizer_step
+[rank1]:     optimizer_output = super().optimizer_step(optimizer, closure, model, **kwargs)
+[rank1]:                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 239, in optimizer_step
+[rank1]:     return self.precision_plugin.optimizer_step(optimizer, model=model, closure=closure, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/plugins/precision/amp.py", line 79, in optimizer_step
+[rank1]:     closure_result = closure()
+[rank1]:                      ^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 146, in __call__
+[rank1]:     self._result = self.closure(*args, **kwargs)
+[rank1]:                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+[rank1]:     return func(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 131, in closure
+[rank1]:     step_output = self._step_fn()
+[rank1]:                   ^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 319, in _training_step
+[rank1]:     training_step_output = call._call_strategy_hook(trainer, "training_step", *kwargs.values())
+[rank1]:                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 329, in _call_strategy_hook
+[rank1]:     output = fn(*args, **kwargs)
+[rank1]:              ^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 390, in training_step
+[rank1]:     return self._forward_redirection(self.model, self.lightning_module, "training_step", *args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 641, in __call__
+[rank1]:     wrapper_output = wrapper_module(*args, **kwargs)
+[rank1]:                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/parallel/distributed.py", line 1632, in forward
+[rank1]:     inputs, kwargs = self._pre_forward(*inputs, **kwargs)
+[rank1]:                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/parallel/distributed.py", line 1523, in _pre_forward
+[rank1]:     if torch.is_grad_enabled() and self.reducer._rebuild_buckets():
+[rank1]:                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]: RuntimeError: It looks like your LightningModule has parameters that were not used in producing the loss returned by training_step. If this is intentional, you must enable the detection of unused parameters in DDP, either by setting the string value `strategy='ddp_find_unused_parameters_true'` or by setting the flag in the strategy with `strategy=DDPStrategy(find_unused_parameters=True)`.
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 168, in <module>
+[rank0]:     main()
+[rank0]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 156, in main
+[rank0]:     analysis =  train_moe_without_ray(config)
+[rank0]:                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 104, in train_moe_without_ray
+[rank0]:     trainer.fit(model=lightning_model,
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 560, in fit
+[rank0]:     call._call_and_handle_interrupt(
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 48, in _call_and_handle_interrupt
+[rank0]:     return trainer.strategy.launcher.launch(trainer_fn, *args, trainer=trainer, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/launchers/subprocess_script.py", line 105, in launch
+[rank0]:     return function(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 598, in _fit_impl
+[rank0]:     self._run(model, ckpt_path=ckpt_path)
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 1011, in _run
+[rank0]:     results = self._run_stage()
+[rank0]:               ^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 1055, in _run_stage
+[rank0]:     self.fit_loop.run()
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py", line 216, in run
+[rank0]:     self.advance()
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py", line 458, in advance
+[rank0]:     self.epoch_loop.run(self._data_fetcher)
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 152, in run
+[rank0]:     self.advance(data_fetcher)
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 348, in advance
+[rank0]:     batch_output = self.automatic_optimization.run(trainer.optimizers[0], batch_idx, kwargs)
+[rank0]:                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 192, in run
+[rank0]:     self._optimizer_step(batch_idx, closure)
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 270, in _optimizer_step
+[rank0]:     call._call_lightning_module_hook(
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 177, in _call_lightning_module_hook
+[rank0]:     output = fn(*args, **kwargs)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/core/module.py", line 1366, in optimizer_step
+[rank0]:     optimizer.step(closure=optimizer_closure)
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/core/optimizer.py", line 154, in step
+[rank0]:     step_output = self._strategy.optimizer_step(self._optimizer, closure, **kwargs)
+[rank0]:                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/ddp.py", line 273, in optimizer_step
+[rank0]:     optimizer_output = super().optimizer_step(optimizer, closure, model, **kwargs)
+[rank0]:                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 239, in optimizer_step
+[rank0]:     return self.precision_plugin.optimizer_step(optimizer, model=model, closure=closure, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/plugins/precision/amp.py", line 79, in optimizer_step
+[rank0]:     closure_result = closure()
+[rank0]:                      ^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 146, in __call__
+[rank0]:     self._result = self.closure(*args, **kwargs)
+[rank0]:                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+[rank0]:     return func(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 131, in closure
+[rank0]:     step_output = self._step_fn()
+[rank0]:                   ^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 319, in _training_step
+[rank0]:     training_step_output = call._call_strategy_hook(trainer, "training_step", *kwargs.values())
+[rank0]:                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 329, in _call_strategy_hook
+[rank0]:     output = fn(*args, **kwargs)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 390, in training_step
+[rank0]:     return self._forward_redirection(self.model, self.lightning_module, "training_step", *args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 641, in __call__
+[rank0]:     wrapper_output = wrapper_module(*args, **kwargs)
+[rank0]:                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/parallel/distributed.py", line 1632, in forward
+[rank0]:     inputs, kwargs = self._pre_forward(*inputs, **kwargs)
+[rank0]:                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/parallel/distributed.py", line 1523, in _pre_forward
+[rank0]:     if torch.is_grad_enabled() and self.reducer._rebuild_buckets():
+[rank0]:                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]: RuntimeError: It looks like your LightningModule has parameters that were not used in producing the loss returned by training_step. If this is intentional, you must enable the detection of unused parameters in DDP, either by setting the string value `strategy='ddp_find_unused_parameters_true'` or by setting the flag in the strategy with `strategy=DDPStrategy(find_unused_parameters=True)`.
+Epoch 0:   3%|▎         | 1/39 [00:05<03:11,  0.20it/s, v_num=15, train_loss=0.851]Command exited with non-zero status 1
+WALL_SECONDS=22.52
+----- END Adapter (rte) -----
+
+[RUN] Adapter  dataset=cb  bs=32  gpus=2  workers=8  epochs=100  patience=10
+----- BEGIN Adapter (cb) -----
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Traceback (most recent call last):
+  File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 168, in <module>
+    main()
+  File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 156, in main
+    analysis =  train_moe_without_ray(config)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 33, in train_moe_without_ray
+    model = load_new_model_for_sequence_classification_from_local_path(config)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/TTLoRAMoE-SC25/utils.py", line 254, in load_new_model_for_sequence_classification_from_local_path
+    model = AutoModelForSequenceClassification.from_pretrained(config["model_path"], num_labels=3)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/models/auto/auto_factory.py", line 571, in from_pretrained
+    return model_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 279, in _wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 4399, in from_pretrained
+    ) = cls._load_pretrained_model(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 4833, in _load_pretrained_model
+    disk_offload_index, cpu_offload_index = _load_state_dict_into_meta_model(
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 824, in _load_state_dict_into_meta_model
+    _load_parameter_into_model(model, param_name, param.to(param_device))
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 712, in _load_parameter_into_model
+    module.load_state_dict({param_type: tensor}, strict=False, assign=True)
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 2215, in load_state_dict
+    raise RuntimeError('Error(s) in loading state_dict for {}:\n\t{}'.format(
+RuntimeError: Error(s) in loading state_dict for Linear:
+	size mismatch for weight: copying a param with shape torch.Size([2, 2048]) from checkpoint, the shape in current model is torch.Size([3, 2048]).
+Command exited with non-zero status 1
+WALL_SECONDS=5.34
+----- END Adapter (cb) -----
+
+[RUN] Adapter  dataset=sick  bs=32  gpus=2  workers=8  epochs=100  patience=10
+----- BEGIN Adapter (sick) -----
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Traceback (most recent call last):
+  File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 168, in <module>
+    main()
+  File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 156, in main
+    analysis =  train_moe_without_ray(config)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 33, in train_moe_without_ray
+    model = load_new_model_for_sequence_classification_from_local_path(config)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/TTLoRAMoE-SC25/utils.py", line 254, in load_new_model_for_sequence_classification_from_local_path
+    model = AutoModelForSequenceClassification.from_pretrained(config["model_path"], num_labels=3)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/models/auto/auto_factory.py", line 571, in from_pretrained
+    return model_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 279, in _wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 4399, in from_pretrained
+    ) = cls._load_pretrained_model(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 4833, in _load_pretrained_model
+    disk_offload_index, cpu_offload_index = _load_state_dict_into_meta_model(
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 824, in _load_state_dict_into_meta_model
+    _load_parameter_into_model(model, param_name, param.to(param_device))
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 712, in _load_parameter_into_model
+    module.load_state_dict({param_type: tensor}, strict=False, assign=True)
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 2215, in load_state_dict
+    raise RuntimeError('Error(s) in loading state_dict for {}:\n\t{}'.format(
+RuntimeError: Error(s) in loading state_dict for Linear:
+	size mismatch for weight: copying a param with shape torch.Size([2, 2048]) from checkpoint, the shape in current model is torch.Size([3, 2048]).
+Command exited with non-zero status 1
+WALL_SECONDS=5.35
+----- END Adapter (sick) -----
+
+[RUN] Adapter  dataset=csqa  bs=32  gpus=2  workers=8  epochs=100  patience=10
+----- BEGIN Adapter (csqa) -----
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Traceback (most recent call last):
+  File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 168, in <module>
+    main()
+  File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 156, in main
+    analysis =  train_moe_without_ray(config)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 33, in train_moe_without_ray
+    model = load_new_model_for_sequence_classification_from_local_path(config)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/TTLoRAMoE-SC25/utils.py", line 258, in load_new_model_for_sequence_classification_from_local_path
+    model = AutoModelForSequenceClassification.from_pretrained(config["model_path"], num_labels=5)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/models/auto/auto_factory.py", line 571, in from_pretrained
+    return model_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 279, in _wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 4399, in from_pretrained
+    ) = cls._load_pretrained_model(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 4833, in _load_pretrained_model
+    disk_offload_index, cpu_offload_index = _load_state_dict_into_meta_model(
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 824, in _load_state_dict_into_meta_model
+    _load_parameter_into_model(model, param_name, param.to(param_device))
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 712, in _load_parameter_into_model
+    module.load_state_dict({param_type: tensor}, strict=False, assign=True)
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 2215, in load_state_dict
+    raise RuntimeError('Error(s) in loading state_dict for {}:\n\t{}'.format(
+RuntimeError: Error(s) in loading state_dict for Linear:
+	size mismatch for weight: copying a param with shape torch.Size([2, 2048]) from checkpoint, the shape in current model is torch.Size([5, 2048]).
+Command exited with non-zero status 1
+WALL_SECONDS=5.36
+----- END Adapter (csqa) -----
+
+[RUN] Adapter  dataset=winogrande_l  bs=32  gpus=2  workers=8  epochs=100  patience=10
+----- BEGIN Adapter (winogrande_l) -----
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Map:   0%|          | 0/1767 [00:00<?, ? examples/s]Map: 100%|██████████| 1767/1767 [00:00<00:00, 16226.95 examples/s]Map: 100%|██████████| 1767/1767 [00:00<00:00, 15776.65 examples/s]
+There are adapters available but none are activated for the forward pass.
+Using 16bit Automatic Mixed Precision (AMP)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+HPU available: False, using: 0 HPUs
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/logger_connector/logger_connector.py:76: Starting from v1.9.0, `tensorboardX` has been removed as a dependency of the `pytorch_lightning` package, due to potential conflicts with other packages in the ML ecosystem. For this reason, `logger=True` will use `CSVLogger` as the default logger, unless the `tensorboard` or `tensorboardX` packages are found. Please `pip install lightning[extra]` or one of them to enable TensorBoard support by default
+Initializing distributed: GLOBAL_RANK: 0, MEMBER: 1/2
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Map:   0%|          | 0/1767 [00:00<?, ? examples/s]Map: 100%|██████████| 1767/1767 [00:00<00:00, 15997.39 examples/s]Map: 100%|██████████| 1767/1767 [00:00<00:00, 15407.25 examples/s]
+There are adapters available but none are activated for the forward pass.
+Initializing distributed: GLOBAL_RANK: 1, MEMBER: 2/2
+----------------------------------------------------------------------------------------------------
+distributed_backend=nccl
+All distributed processes registered. Starting with 2 processes
+----------------------------------------------------------------------------------------------------
+
+LOCAL_RANK: 1 - CUDA_VISIBLE_DEVICES: [0,1]
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/utilities/model_summary/model_summary.py:231: Precision 16-mixed is not supported by the model summary.  Estimated model size in MB will not be accurate. Using 32 bits instead.
+
+  | Name     | Type               | Params | Mode 
+--------------------------------------------------------
+0 | model    | LlamaAdapterModel  | 1.2 B  | eval 
+1 | val_f1   | MulticlassF1Score  | 0      | train
+2 | test_f1  | MulticlassF1Score  | 0      | train
+3 | val_acc  | MulticlassAccuracy | 0      | train
+4 | test_acc | MulticlassAccuracy | 0      | train
+--------------------------------------------------------
+12.6 M    Trainable params
+1.2 B     Non-trainable params
+1.2 B     Total params
+4,993.769 Total estimated model params size (MB)
+653       Modules in train mode
+12        Modules in eval mode
+Sanity Checking: |          | 0/? [00:00<?, ?it/s]Sanity Checking: |          | 0/? [00:00<?, ?it/s]Sanity Checking DataLoader 0:   0%|          | 0/2 [00:00<?, ?it/s]Sanity Checking DataLoader 0:  50%|█████     | 1/2 [00:00<00:00,  1.12it/s]Sanity Checking DataLoader 0: 100%|██████████| 2/2 [00:00<00:00,  2.09it/s]/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/logger_connector/result.py:434: It is recommended to use `self.log('val_loss', ..., sync_dist=True)` when logging on epoch level in distributed setting to accumulate the metric across devices.
+                                                                           /local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py:527: Found 12 module(s) in eval mode at the start of training. This may lead to unexpected behavior during training. If this is intentional, you can ignore this warning.
+Training: |          | 0/? [00:00<?, ?it/s]Training: |          | 0/? [00:00<?, ?it/s]Epoch 0:   0%|          | 0/160 [00:00<?, ?it/s]Epoch 0:   1%|          | 1/160 [00:00<00:40,  3.94it/s]Epoch 0:   1%|          | 1/160 [00:00<00:40,  3.94it/s, v_num=16, train_loss=0.708][rank0]: Traceback (most recent call last):
+[rank0]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 168, in <module>
+[rank0]:     main()
+[rank0]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 156, in main
+[rank0]:     analysis =  train_moe_without_ray(config)
+[rank0]:                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 104, in train_moe_without_ray
+[rank0]:     trainer.fit(model=lightning_model,
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 560, in fit
+[rank0]:     call._call_and_handle_interrupt(
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 48, in _call_and_handle_interrupt
+[rank0]:     return trainer.strategy.launcher.launch(trainer_fn, *args, trainer=trainer, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/launchers/subprocess_script.py", line 105, in launch
+[rank0]:     return function(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 598, in _fit_impl
+[rank0]:     self._run(model, ckpt_path=ckpt_path)
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 1011, in _run
+[rank0]:     results = self._run_stage()
+[rank0]:               ^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 1055, in _run_stage
+[rank0]:     self.fit_loop.run()
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py", line 216, in run
+[rank0]:     self.advance()
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py", line 458, in advance
+[rank0]:     self.epoch_loop.run(self._data_fetcher)
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 152, in run
+[rank0]:     self.advance(data_fetcher)
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 348, in advance
+[rank0]:     batch_output = self.automatic_optimization.run(trainer.optimizers[0], batch_idx, kwargs)
+[rank0]:                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 192, in run
+[rank0]:     self._optimizer_step(batch_idx, closure)
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 270, in _optimizer_step
+[rank0]:     call._call_lightning_module_hook(
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 177, in _call_lightning_module_hook
+[rank0]:     output = fn(*args, **kwargs)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/core/module.py", line 1366, in optimizer_step
+[rank0]:     optimizer.step(closure=optimizer_closure)
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/core/optimizer.py", line 154, in step
+[rank0]:     step_output = self._strategy.optimizer_step(self._optimizer, closure, **kwargs)
+[rank0]:                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/ddp.py", line 273, in optimizer_step
+[rank0]:     optimizer_output = super().optimizer_step(optimizer, closure, model, **kwargs)
+[rank0]:                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 239, in optimizer_step
+[rank0]:     return self.precision_plugin.optimizer_step(optimizer, model=model, closure=closure, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/plugins/precision/amp.py", line 79, in optimizer_step
+[rank0]:     closure_result = closure()
+[rank0]:                      ^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 146, in __call__
+[rank0]:     self._result = self.closure(*args, **kwargs)
+[rank0]:                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+[rank0]:     return func(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 131, in closure
+[rank0]:     step_output = self._step_fn()
+[rank0]:                   ^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 319, in _training_step
+[rank0]:     training_step_output = call._call_strategy_hook(trainer, "training_step", *kwargs.values())
+[rank0]:                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 329, in _call_strategy_hook
+[rank0]:     output = fn(*args, **kwargs)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 390, in training_step
+[rank0]:     return self._forward_redirection(self.model, self.lightning_module, "training_step", *args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 641, in __call__
+[rank0]:     wrapper_output = wrapper_module(*args, **kwargs)
+[rank0]:                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/parallel/distributed.py", line 1632, in forward
+[rank0]:     inputs, kwargs = self._pre_forward(*inputs, **kwargs)
+[rank0]:                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/parallel/distributed.py", line 1523, in _pre_forward
+[rank0]:     if torch.is_grad_enabled() and self.reducer._rebuild_buckets():
+[rank0]:                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]: RuntimeError: It looks like your LightningModule has parameters that were not used in producing the loss returned by training_step. If this is intentional, you must enable the detection of unused parameters in DDP, either by setting the string value `strategy='ddp_find_unused_parameters_true'` or by setting the flag in the strategy with `strategy=DDPStrategy(find_unused_parameters=True)`.
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 168, in <module>
+[rank1]:     main()
+[rank1]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 156, in main
+[rank1]:     analysis =  train_moe_without_ray(config)
+[rank1]:                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 104, in train_moe_without_ray
+[rank1]:     trainer.fit(model=lightning_model,
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 560, in fit
+[rank1]:     call._call_and_handle_interrupt(
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 48, in _call_and_handle_interrupt
+[rank1]:     return trainer.strategy.launcher.launch(trainer_fn, *args, trainer=trainer, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/launchers/subprocess_script.py", line 105, in launch
+[rank1]:     return function(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 598, in _fit_impl
+[rank1]:     self._run(model, ckpt_path=ckpt_path)
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 1011, in _run
+[rank1]:     results = self._run_stage()
+[rank1]:               ^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 1055, in _run_stage
+[rank1]:     self.fit_loop.run()
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py", line 216, in run
+[rank1]:     self.advance()
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py", line 458, in advance
+[rank1]:     self.epoch_loop.run(self._data_fetcher)
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 152, in run
+[rank1]:     self.advance(data_fetcher)
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 348, in advance
+[rank1]:     batch_output = self.automatic_optimization.run(trainer.optimizers[0], batch_idx, kwargs)
+[rank1]:                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 192, in run
+[rank1]:     self._optimizer_step(batch_idx, closure)
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 270, in _optimizer_step
+[rank1]:     call._call_lightning_module_hook(
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 177, in _call_lightning_module_hook
+[rank1]:     output = fn(*args, **kwargs)
+[rank1]:              ^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/core/module.py", line 1366, in optimizer_step
+[rank1]:     optimizer.step(closure=optimizer_closure)
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/core/optimizer.py", line 154, in step
+[rank1]:     step_output = self._strategy.optimizer_step(self._optimizer, closure, **kwargs)
+[rank1]:                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/ddp.py", line 273, in optimizer_step
+[rank1]:     optimizer_output = super().optimizer_step(optimizer, closure, model, **kwargs)
+[rank1]:                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 239, in optimizer_step
+[rank1]:     return self.precision_plugin.optimizer_step(optimizer, model=model, closure=closure, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/plugins/precision/amp.py", line 79, in optimizer_step
+[rank1]:     closure_result = closure()
+[rank1]:                      ^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 146, in __call__
+[rank1]:     self._result = self.closure(*args, **kwargs)
+[rank1]:                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+[rank1]:     return func(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 131, in closure
+[rank1]:     step_output = self._step_fn()
+[rank1]:                   ^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 319, in _training_step
+[rank1]:     training_step_output = call._call_strategy_hook(trainer, "training_step", *kwargs.values())
+[rank1]:                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 329, in _call_strategy_hook
+[rank1]:     output = fn(*args, **kwargs)
+[rank1]:              ^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 390, in training_step
+[rank1]:     return self._forward_redirection(self.model, self.lightning_module, "training_step", *args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 641, in __call__
+[rank1]:     wrapper_output = wrapper_module(*args, **kwargs)
+[rank1]:                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/parallel/distributed.py", line 1632, in forward
+[rank1]:     inputs, kwargs = self._pre_forward(*inputs, **kwargs)
+[rank1]:                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/parallel/distributed.py", line 1523, in _pre_forward
+[rank1]:     if torch.is_grad_enabled() and self.reducer._rebuild_buckets():
+[rank1]:                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]: RuntimeError: It looks like your LightningModule has parameters that were not used in producing the loss returned by training_step. If this is intentional, you must enable the detection of unused parameters in DDP, either by setting the string value `strategy='ddp_find_unused_parameters_true'` or by setting the flag in the strategy with `strategy=DDPStrategy(find_unused_parameters=True)`.
+Epoch 0:   1%|          | 1/160 [00:04<11:23,  0.23it/s, v_num=16, train_loss=0.708]Command exited with non-zero status 1
+WALL_SECONDS=20.78
+----- END Adapter (winogrande_l) -----
+
+[RUN] Adapter  dataset=cosmosqa  bs=32  gpus=2  workers=8  epochs=100  patience=10
+----- BEGIN Adapter (cosmosqa) -----
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Traceback (most recent call last):
+  File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 168, in <module>
+    main()
+  File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 156, in main
+    analysis =  train_moe_without_ray(config)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 33, in train_moe_without_ray
+    model = load_new_model_for_sequence_classification_from_local_path(config)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/TTLoRAMoE-SC25/utils.py", line 256, in load_new_model_for_sequence_classification_from_local_path
+    model = AutoModelForSequenceClassification.from_pretrained(config["model_path"], num_labels=4)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/models/auto/auto_factory.py", line 571, in from_pretrained
+    return model_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 279, in _wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 4399, in from_pretrained
+    ) = cls._load_pretrained_model(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 4833, in _load_pretrained_model
+    disk_offload_index, cpu_offload_index = _load_state_dict_into_meta_model(
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 824, in _load_state_dict_into_meta_model
+    _load_parameter_into_model(model, param_name, param.to(param_device))
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 712, in _load_parameter_into_model
+    module.load_state_dict({param_type: tensor}, strict=False, assign=True)
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 2215, in load_state_dict
+    raise RuntimeError('Error(s) in loading state_dict for {}:\n\t{}'.format(
+RuntimeError: Error(s) in loading state_dict for Linear:
+	size mismatch for weight: copying a param with shape torch.Size([2, 2048]) from checkpoint, the shape in current model is torch.Size([4, 2048]).
+Command exited with non-zero status 1
+WALL_SECONDS=5.37
+----- END Adapter (cosmosqa) -----
+
+[RUN] Adapter  dataset=socialiqa  bs=32  gpus=2  workers=8  epochs=100  patience=10
+----- BEGIN Adapter (socialiqa) -----
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Traceback (most recent call last):
+  File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 168, in <module>
+    main()
+  File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 156, in main
+    analysis =  train_moe_without_ray(config)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 33, in train_moe_without_ray
+    model = load_new_model_for_sequence_classification_from_local_path(config)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/TTLoRAMoE-SC25/utils.py", line 254, in load_new_model_for_sequence_classification_from_local_path
+    model = AutoModelForSequenceClassification.from_pretrained(config["model_path"], num_labels=3)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/models/auto/auto_factory.py", line 571, in from_pretrained
+    return model_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 279, in _wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 4399, in from_pretrained
+    ) = cls._load_pretrained_model(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 4833, in _load_pretrained_model
+    disk_offload_index, cpu_offload_index = _load_state_dict_into_meta_model(
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 824, in _load_state_dict_into_meta_model
+    _load_parameter_into_model(model, param_name, param.to(param_device))
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 712, in _load_parameter_into_model
+    module.load_state_dict({param_type: tensor}, strict=False, assign=True)
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 2215, in load_state_dict
+    raise RuntimeError('Error(s) in loading state_dict for {}:\n\t{}'.format(
+RuntimeError: Error(s) in loading state_dict for Linear:
+	size mismatch for weight: copying a param with shape torch.Size([2, 2048]) from checkpoint, the shape in current model is torch.Size([3, 2048]).
+Command exited with non-zero status 1
+WALL_SECONDS=5.33
+----- END Adapter (socialiqa) -----
+
+[RUN] Adapter  dataset=hellaswag  bs=32  gpus=2  workers=8  epochs=100  patience=10
+----- BEGIN Adapter (hellaswag) -----
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Traceback (most recent call last):
+  File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 168, in <module>
+    main()
+  File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 156, in main
+    analysis =  train_moe_without_ray(config)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 33, in train_moe_without_ray
+    model = load_new_model_for_sequence_classification_from_local_path(config)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/TTLoRAMoE-SC25/utils.py", line 256, in load_new_model_for_sequence_classification_from_local_path
+    model = AutoModelForSequenceClassification.from_pretrained(config["model_path"], num_labels=4)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/models/auto/auto_factory.py", line 571, in from_pretrained
+    return model_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 279, in _wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 4399, in from_pretrained
+    ) = cls._load_pretrained_model(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 4833, in _load_pretrained_model
+    disk_offload_index, cpu_offload_index = _load_state_dict_into_meta_model(
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 824, in _load_state_dict_into_meta_model
+    _load_parameter_into_model(model, param_name, param.to(param_device))
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 712, in _load_parameter_into_model
+    module.load_state_dict({param_type: tensor}, strict=False, assign=True)
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 2215, in load_state_dict
+    raise RuntimeError('Error(s) in loading state_dict for {}:\n\t{}'.format(
+RuntimeError: Error(s) in loading state_dict for Linear:
+	size mismatch for weight: copying a param with shape torch.Size([2, 2048]) from checkpoint, the shape in current model is torch.Size([4, 2048]).
+Command exited with non-zero status 1
+WALL_SECONDS=5.35
+----- END Adapter (hellaswag) -----
+
+[RUN] Adapter  dataset=qnli  bs=32  gpus=2  workers=8  epochs=100  patience=10
+----- BEGIN Adapter (qnli) -----
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Map:   0%|          | 0/5463 [00:00<?, ? examples/s]Map: 100%|██████████| 5463/5463 [00:00<00:00, 6412.71 examples/s]Map: 100%|██████████| 5463/5463 [00:00<00:00, 5904.44 examples/s]
+There are adapters available but none are activated for the forward pass.
+Using 16bit Automatic Mixed Precision (AMP)
+GPU available: True (cuda), used: True
+TPU available: False, using: 0 TPU cores
+HPU available: False, using: 0 HPUs
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/logger_connector/logger_connector.py:76: Starting from v1.9.0, `tensorboardX` has been removed as a dependency of the `pytorch_lightning` package, due to potential conflicts with other packages in the ML ecosystem. For this reason, `logger=True` will use `CSVLogger` as the default logger, unless the `tensorboard` or `tensorboardX` packages are found. Please `pip install lightning[extra]` or one of them to enable TensorBoard support by default
+Initializing distributed: GLOBAL_RANK: 0, MEMBER: 1/2
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Map:   0%|          | 0/5463 [00:00<?, ? examples/s]Map: 100%|██████████| 5463/5463 [00:00<00:00, 6706.36 examples/s]Map: 100%|██████████| 5463/5463 [00:00<00:00, 6467.17 examples/s]
+There are adapters available but none are activated for the forward pass.
+Initializing distributed: GLOBAL_RANK: 1, MEMBER: 2/2
+----------------------------------------------------------------------------------------------------
+distributed_backend=nccl
+All distributed processes registered. Starting with 2 processes
+----------------------------------------------------------------------------------------------------
+
+LOCAL_RANK: 1 - CUDA_VISIBLE_DEVICES: [0,1]
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0,1]
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/utilities/model_summary/model_summary.py:231: Precision 16-mixed is not supported by the model summary.  Estimated model size in MB will not be accurate. Using 32 bits instead.
+
+  | Name     | Type               | Params | Mode 
+--------------------------------------------------------
+0 | model    | LlamaAdapterModel  | 1.2 B  | eval 
+1 | val_f1   | MulticlassF1Score  | 0      | train
+2 | test_f1  | MulticlassF1Score  | 0      | train
+3 | val_acc  | MulticlassAccuracy | 0      | train
+4 | test_acc | MulticlassAccuracy | 0      | train
+--------------------------------------------------------
+12.6 M    Trainable params
+1.2 B     Non-trainable params
+1.2 B     Total params
+4,993.769 Total estimated model params size (MB)
+653       Modules in train mode
+12        Modules in eval mode
+Sanity Checking: |          | 0/? [00:00<?, ?it/s]Sanity Checking: |          | 0/? [00:00<?, ?it/s]Sanity Checking DataLoader 0:   0%|          | 0/2 [00:00<?, ?it/s]Sanity Checking DataLoader 0:  50%|█████     | 1/2 [00:01<00:01,  0.91it/s]Sanity Checking DataLoader 0: 100%|██████████| 2/2 [00:01<00:00,  1.43it/s]/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/connectors/logger_connector/result.py:434: It is recommended to use `self.log('val_loss', ..., sync_dist=True)` when logging on epoch level in distributed setting to accumulate the metric across devices.
+                                                                           /local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py:527: Found 12 module(s) in eval mode at the start of training. This may lead to unexpected behavior during training. If this is intentional, you can ignore this warning.
+Training: |          | 0/? [00:00<?, ?it/s]Training: |          | 0/? [00:00<?, ?it/s]Epoch 0:   0%|          | 0/1637 [00:00<?, ?it/s]Epoch 0:   0%|          | 1/1637 [00:01<45:11,  0.60it/s]Epoch 0:   0%|          | 1/1637 [00:01<45:12,  0.60it/s, v_num=17, train_loss=0.894][rank1]: Traceback (most recent call last):
+[rank1]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 168, in <module>
+[rank1]:     main()
+[rank1]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 156, in main
+[rank1]:     analysis =  train_moe_without_ray(config)
+[rank1]:                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 104, in train_moe_without_ray
+[rank1]:     trainer.fit(model=lightning_model,
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 560, in fit
+[rank1]:     call._call_and_handle_interrupt(
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 48, in _call_and_handle_interrupt
+[rank1]:     return trainer.strategy.launcher.launch(trainer_fn, *args, trainer=trainer, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/launchers/subprocess_script.py", line 105, in launch
+[rank1]:     return function(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 598, in _fit_impl
+[rank1]:     self._run(model, ckpt_path=ckpt_path)
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 1011, in _run
+[rank1]:     results = self._run_stage()
+[rank1]:               ^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 1055, in _run_stage
+[rank1]:     self.fit_loop.run()
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py", line 216, in run
+[rank1]:     self.advance()
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py", line 458, in advance
+[rank1]:     self.epoch_loop.run(self._data_fetcher)
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 152, in run
+[rank1]:     self.advance(data_fetcher)
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 348, in advance
+[rank1]:     batch_output = self.automatic_optimization.run(trainer.optimizers[0], batch_idx, kwargs)
+[rank1]:                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 192, in run
+[rank1]:     self._optimizer_step(batch_idx, closure)
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 270, in _optimizer_step
+[rank1]:     call._call_lightning_module_hook(
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 177, in _call_lightning_module_hook
+[rank1]:     output = fn(*args, **kwargs)
+[rank1]:              ^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/core/module.py", line 1366, in optimizer_step
+[rank1]:     optimizer.step(closure=optimizer_closure)
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/core/optimizer.py", line 154, in step
+[rank1]:     step_output = self._strategy.optimizer_step(self._optimizer, closure, **kwargs)
+[rank1]:                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/ddp.py", line 273, in optimizer_step
+[rank1]:     optimizer_output = super().optimizer_step(optimizer, closure, model, **kwargs)
+[rank1]:                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 239, in optimizer_step
+[rank1]:     return self.precision_plugin.optimizer_step(optimizer, model=model, closure=closure, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/plugins/precision/amp.py", line 79, in optimizer_step
+[rank1]:     closure_result = closure()
+[rank1]:                      ^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 146, in __call__
+[rank1]:     self._result = self.closure(*args, **kwargs)
+[rank1]:                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+[rank1]:     return func(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 131, in closure
+[rank1]:     step_output = self._step_fn()
+[rank1]:                   ^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 319, in _training_step
+[rank1]:     training_step_output = call._call_strategy_hook(trainer, "training_step", *kwargs.values())
+[rank1]:                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 329, in _call_strategy_hook
+[rank1]:     output = fn(*args, **kwargs)
+[rank1]:              ^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 390, in training_step
+[rank1]:     return self._forward_redirection(self.model, self.lightning_module, "training_step", *args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 641, in __call__
+[rank1]:     wrapper_output = wrapper_module(*args, **kwargs)
+[rank1]:                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+[rank1]:     return self._call_impl(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+[rank1]:     return forward_call(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/parallel/distributed.py", line 1632, in forward
+[rank1]:     inputs, kwargs = self._pre_forward(*inputs, **kwargs)
+[rank1]:                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/parallel/distributed.py", line 1523, in _pre_forward
+[rank1]:     if torch.is_grad_enabled() and self.reducer._rebuild_buckets():
+[rank1]:                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]: RuntimeError: It looks like your LightningModule has parameters that were not used in producing the loss returned by training_step. If this is intentional, you must enable the detection of unused parameters in DDP, either by setting the string value `strategy='ddp_find_unused_parameters_true'` or by setting the flag in the strategy with `strategy=DDPStrategy(find_unused_parameters=True)`.
+[rank0]: Traceback (most recent call last):
+[rank0]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 168, in <module>
+[rank0]:     main()
+[rank0]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 156, in main
+[rank0]:     analysis =  train_moe_without_ray(config)
+[rank0]:                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 104, in train_moe_without_ray
+[rank0]:     trainer.fit(model=lightning_model,
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 560, in fit
+[rank0]:     call._call_and_handle_interrupt(
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 48, in _call_and_handle_interrupt
+[rank0]:     return trainer.strategy.launcher.launch(trainer_fn, *args, trainer=trainer, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/launchers/subprocess_script.py", line 105, in launch
+[rank0]:     return function(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 598, in _fit_impl
+[rank0]:     self._run(model, ckpt_path=ckpt_path)
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 1011, in _run
+[rank0]:     results = self._run_stage()
+[rank0]:               ^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/trainer.py", line 1055, in _run_stage
+[rank0]:     self.fit_loop.run()
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py", line 216, in run
+[rank0]:     self.advance()
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/fit_loop.py", line 458, in advance
+[rank0]:     self.epoch_loop.run(self._data_fetcher)
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 152, in run
+[rank0]:     self.advance(data_fetcher)
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 348, in advance
+[rank0]:     batch_output = self.automatic_optimization.run(trainer.optimizers[0], batch_idx, kwargs)
+[rank0]:                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 192, in run
+[rank0]:     self._optimizer_step(batch_idx, closure)
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 270, in _optimizer_step
+[rank0]:     call._call_lightning_module_hook(
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 177, in _call_lightning_module_hook
+[rank0]:     output = fn(*args, **kwargs)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/core/module.py", line 1366, in optimizer_step
+[rank0]:     optimizer.step(closure=optimizer_closure)
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/core/optimizer.py", line 154, in step
+[rank0]:     step_output = self._strategy.optimizer_step(self._optimizer, closure, **kwargs)
+[rank0]:                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/ddp.py", line 273, in optimizer_step
+[rank0]:     optimizer_output = super().optimizer_step(optimizer, closure, model, **kwargs)
+[rank0]:                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 239, in optimizer_step
+[rank0]:     return self.precision_plugin.optimizer_step(optimizer, model=model, closure=closure, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/plugins/precision/amp.py", line 79, in optimizer_step
+[rank0]:     closure_result = closure()
+[rank0]:                      ^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 146, in __call__
+[rank0]:     self._result = self.closure(*args, **kwargs)
+[rank0]:                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+[rank0]:     return func(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 131, in closure
+[rank0]:     step_output = self._step_fn()
+[rank0]:                   ^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 319, in _training_step
+[rank0]:     training_step_output = call._call_strategy_hook(trainer, "training_step", *kwargs.values())
+[rank0]:                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/trainer/call.py", line 329, in _call_strategy_hook
+[rank0]:     output = fn(*args, **kwargs)
+[rank0]:              ^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 390, in training_step
+[rank0]:     return self._forward_redirection(self.model, self.lightning_module, "training_step", *args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/pytorch_lightning/strategies/strategy.py", line 641, in __call__
+[rank0]:     wrapper_output = wrapper_module(*args, **kwargs)
+[rank0]:                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1553, in _wrapped_call_impl
+[rank0]:     return self._call_impl(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1562, in _call_impl
+[rank0]:     return forward_call(*args, **kwargs)
+[rank0]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/parallel/distributed.py", line 1632, in forward
+[rank0]:     inputs, kwargs = self._pre_forward(*inputs, **kwargs)
+[rank0]:                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]:   File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/parallel/distributed.py", line 1523, in _pre_forward
+[rank0]:     if torch.is_grad_enabled() and self.reducer._rebuild_buckets():
+[rank0]:                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank0]: RuntimeError: It looks like your LightningModule has parameters that were not used in producing the loss returned by training_step. If this is intentional, you must enable the detection of unused parameters in DDP, either by setting the string value `strategy='ddp_find_unused_parameters_true'` or by setting the flag in the strategy with `strategy=DDPStrategy(find_unused_parameters=True)`.
+Epoch 0:   0%|          | 1/1637 [00:05<2:34:58,  0.18it/s, v_num=17, train_loss=0.894]Command exited with non-zero status 1
+WALL_SECONDS=24.09
+----- END Adapter (qnli) -----
+
+[RUN] Adapter  dataset=mnli  bs=32  gpus=2  workers=8  epochs=100  patience=10
+----- BEGIN Adapter (mnli) -----
+/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/utils/hub.py:105: FutureWarning: Using `TRANSFORMERS_CACHE` is deprecated and will be removed in v5 of Transformers. Use `HF_HOME` instead.
+  warnings.warn(
+Traceback (most recent call last):
+  File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 168, in <module>
+    main()
+  File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 156, in main
+    analysis =  train_moe_without_ray(config)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/TTLoRAMoE-SC25/Artifact_1.2/single_Adapter_training.py", line 33, in train_moe_without_ray
+    model = load_new_model_for_sequence_classification_from_local_path(config)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/TTLoRAMoE-SC25/utils.py", line 254, in load_new_model_for_sequence_classification_from_local_path
+    model = AutoModelForSequenceClassification.from_pretrained(config["model_path"], num_labels=3)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/models/auto/auto_factory.py", line 571, in from_pretrained
+    return model_class.from_pretrained(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 279, in _wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 4399, in from_pretrained
+    ) = cls._load_pretrained_model(
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 4833, in _load_pretrained_model
+    disk_offload_index, cpu_offload_index = _load_state_dict_into_meta_model(
+                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 116, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 824, in _load_state_dict_into_meta_model
+    _load_parameter_into_model(model, param_name, param.to(param_device))
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/transformers/modeling_utils.py", line 712, in _load_parameter_into_model
+    module.load_state_dict({param_type: tensor}, strict=False, assign=True)
+  File "/local/miniconda/envs/ttloramoe/lib/python3.11/site-packages/torch/nn/modules/module.py", line 2215, in load_state_dict
+    raise RuntimeError('Error(s) in loading state_dict for {}:\n\t{}'.format(
+RuntimeError: Error(s) in loading state_dict for Linear:
+	size mismatch for weight: copying a param with shape torch.Size([2, 2048]) from checkpoint, the shape in current model is torch.Size([3, 2048]).
+Command exited with non-zero status 1
+WALL_SECONDS=5.33
+----- END Adapter (mnli) -----
+
